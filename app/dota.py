@@ -32,19 +32,48 @@ class dota2sql:
     except:
       traceback.print_exc()
 
-  def sqlexe(self,sql):
+  def query(self,sql):
     try:
       cur = self.conn.cursor()
       cur.execute(sql)
       data = cur.fetchall()
       cur.close()
-      return data
+      return data         #返回结果集
     except:
       traceback.print_exc()
 
+  def exe(self,sql):
+    try:
+      cur = self.conn.cursor()
+      cul= cur.execute(sql)
+      self.conn.commit()
+      cur.close()
+      return cul          #返回受影响的行数
+    except:
+      traceback.print_exc()
+
+  def update_item(self,dic):
+    try:
+       sql = 'DELETE FROM items'
+       self.exe(sql)
+       cur = self.conn.cursor()
+       for value in dic['items']:
+        col = ''
+        val = ''
+        for k,v in value.items():
+          col += '`' + k + '`,'
+          val += '\"' + v + '\",' if isinstance(v,str) else str(v) + ','
+        col = col[:-1]
+        val = val[:-1]
+        sql = 'INSERT INTO `items` (' + col + ') VALUES (' + val + ');'
+        cul = self.exe(sql)
+    except:
+      traceback.print_exc()
+    print('update item success!')
+
   def login(self,username,password):
     sql = 'select `uid`,`username`,`password` from `users` where `username` = "' + username + '";'
-    data = self.sqlexe(sql)
+    data = self.query(sql)
     if not data:
       return 'USER_NOT_FIND' 
     if md5((username + password + '+5').encode('utf-8')) == data[0][2]:
@@ -53,7 +82,6 @@ class dota2sql:
 
   def register(self,username,password):
     sql = 'insert into `users` (`username`,`password`) VALUES ( "'+ username +'" , "'+md5((username + password + '+5').encode('utf-8'))+'");'
-    cur = self.conn.cursor()
-    data = cur.execute(sql)
-    self.conn.commit()
-    return data
+    return self.exe(sql)
+
+
