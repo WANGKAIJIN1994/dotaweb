@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index.css') }}">
+	<title>DotaMax</title>
+</head>
+<body>
+	<heard>
+		<div class="nav-logo">
+			<img class="user-avatar" src="{{ url_for('static',filename='images/default_avatar.png') }}"/>
+			<div class="user-infor">
+				<p class="row">
+					<span class="label">当前账号</span>
+					<span class="content">替换</span>
+				</p>
+				<p class="row">
+					<span class="label">MAX ID</span>
+					<span class="content">替换</span>
+				</p>
+				<p class="row">
+					<span class="label">昵称</span>
+					<span class="content">替换</span>
+				</p>
+				<p class="row">
+					<span class="label">Steam ID</span>
+					<span class="content">替换替换替换替换</span>
+				</p>
+			</div>
+		</div>
+		<nav id="nav-heard">
+			<ul>
+				<li><a href="index.html">综合统计</a></li>
+				<li><a href="hero.html">英雄统计</a></li>
+				<li><a href="goods.html">物品统计</a></li>
+				<li><a href="competition.html">比赛统计</a></li>
+			</ul>
+		</nav>
+	</heard>
+	<section class="wrap">
+		<table class="table">
+		<caption>常用英雄</caption>
+		<tr>
+			<th style="width:20%;">英雄</th>
+			<th style="width:20%;">使用次数</th>
+			<th style="width:20%;">胜率</th>
+			<th style="width:20%;">KDA(K/D/A)</th>
+			<th style="width:20%;">平均KDA</th>
+		</tr>
+		<tr>
+			<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td><p>22%</p><div class="tdcolor"></div></td>
+			<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+		</tr>
+		<tr class="tr1">
+			<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td><p>22%</p><div class="tdcolor"></div></td>
+			<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+		</tr>
+		<tr>
+			<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td><p>22%</p><div class="tdcolor"></div></td>
+			<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+		</tr>
+		<tr class="tr1">
+			<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td><p>22%</p><div class="tdcolor"></div></td>
+			<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+		</tr>
+		</table>
+		
+		<table class="table">
+		<caption>最近比赛</caption>
+		<tr>
+			<th style="width:20%;text-align:left;padding-left:10px;">英雄</th>
+			<th style="width:20%;text-align:left;padding-left:10px;">比赛ID</th>
+			<th style="width:10%;text-align:left;padding-left:10px;">结束时间</th>
+			<th style="width:10%;text-align:left;padding-left:10px;">结果</th>
+			<th style="width:25%;text-align:left;padding-left:10px;">KDA(K/D/A)</th>
+			<th style="width:15%;text-align:left;padding-left:10px;">Level</th>
+		</tr>
+		<tr>
+			<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
+			<td><p>213536647544</p><p>全阵营</p></td>
+			<td>2个月前</td>
+			<td>胜利</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td>Normal</td>
+		</tr>
+		<tr class="tr1">
+			<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
+			<td><p>213536647544</p><p>全阵营</p></td>
+			<td>2个月前</td>
+			<td>胜利</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td>Normal</td>
+		</tr>
+		<tr>
+			<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
+			<td><p>213536647544</p><p>全阵营</p></td>
+			<td>2个月前</td>
+			<td>胜利</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td>Normal</td>
+		</tr>
+		<tr class="tr1">
+			<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
+			<td><p>213536647544</p><p>全阵营</p></td>
+			<td>2个月前</td>
+			<td>胜利</td>
+			<td><p>22</p><div class="tdcolor"></div></td>
+			<td>Normal</td>
+		</tr>
+		</table>
+		
+		<table class="table">
+		<caption>最高纪录</caption>
+		<tr>
+			<th style="width:22%;text-align:left;padding-left:10px;">类型</th>
+			<th style="width:22%;text-align:left;padding-left:10px;">比赛ID</th>
+			<th style="width:17%;text-align:left;padding-left:10px;">结果</th>
+			<th style="width:22%;text-align:left;padding-left:10px;">英雄</th>
+			<th style="width:17%;text-align:left;padding-left:10px;">记录</th>
+		</tr>
+		<tr>
+			<td>最高击杀</td>
+			<td>2372837952</td>
+			<td>胜利</td>
+			<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
+			<td>25</td>
+		</tr>
+		<tr>
+			<td>最高击杀</td>
+			<td>2372837952</td>
+			<td>胜利</td>
+			<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
+			<td>25</td>
+		</tr>
+		<tr>
+			<td>最高击杀</td>
+			<td>2372837952</td>
+			<td>胜利</td>
+			<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
+			<td>25</td>
+		</tr>
+		<tr>
+			<td>最高击杀</td>
+			<td>2372837952</td>
+			<td>胜利</td>
+			<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
+			<td>25</td>
+		</tr>
+		</table>
+	</section> 
+</body>
+</html>
