@@ -26,7 +26,7 @@ function show_Login(){
 }
 
 function show_Register(){
-	document.getElementById("setRegister").innerHTML = '<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="confirm" placeholder="确认密码:"/><br/>';
+	document.getElementById("setRegister").innerHTML = '<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="confirm" placeholder="confirm password:"/><br/>';
     document.getElementById("login").style.color = "rgb(204,204,204)";
     document.getElementById("register").style.color = "white";
     document.getElementById("switchLR").setAttribute("value","Register");
