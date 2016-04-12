@@ -21,7 +21,7 @@
 		</div>
 	    <img src="{{ url_for('static',filename='./images/max.png') }}" style="margin:10px;width:120px;" />
 	    <p style="margin-bottom:20px;color:#ccc;font-size: 14px;font-weight: 600;">The first game data platform</p>
-	    <form name="form_login" action="" method="post">
+	    <form name="form_login" action="login" method="post">
 			<input onkeydown="switchline(event)" autofocus="autofocus" class="login-input all-radius" type="text" name="username" id="username" placeholder="username:" /><br/>
 			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="password" placeholder="password:"/><br/>
 			<div id="error">{{error}}</div>
