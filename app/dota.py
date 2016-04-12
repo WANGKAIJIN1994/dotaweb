@@ -52,12 +52,11 @@ class dota2sql:
     except:
       traceback.print_exc()
 
-  def update_item(self,dic):
+  def update_item(self,dic,table):
     try:
-       sql = 'DELETE FROM items'
+       sql = 'DELETE FROM ' + table
        self.exe(sql)
-       cur = self.conn.cursor()
-       for value in dic['items']:
+       for value in dic[table]:
         col = ''
         val = ''
         for k,v in value.items():
@@ -65,7 +64,7 @@ class dota2sql:
           val += '\"' + v + '\",' if isinstance(v,str) else str(v) + ','
         col = col[:-1]
         val = val[:-1]
-        sql = 'INSERT INTO `items` (' + col + ') VALUES (' + val + ');'
+        sql = 'INSERT INTO `' + table + '` (' + col + ') VALUES (' + val + ');'
         cul = self.exe(sql)
     except:
       traceback.print_exc()

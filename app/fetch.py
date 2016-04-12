@@ -23,25 +23,33 @@ class Fetch(threading.Thread): #The timer class is derived from the class thread
     # def stop(self):  
     #     self.thread_stop = True  
         if self.method == 'get_match_details':
-            match = api.get_match_details(match_id=1000193456)
+            match = api.get_match_details(match_id=params)
             print(match)
 
         if self.method == 'get_match_history':
-            hist = api.get_match_history(account_id=76482434)
+            hist = api.get_match_history(account_id=params)
             print(hist)
+            dotaapi.update_hist(hist)
 
         if self.method == 'items':
             item = api.get_game_items()
             # for value in item['items']:
             #     print(value['name'])
-            dotaapi.insert_item(item)
+            dotaapi.insert_item(item,'items')
+
+        if self.method == 'heroes':
+            item = api.get_game_heroes()
+            # for value in item['items']:
+            #     print(value['name'])
+            dotaapi.insert_item(item,'heroes')
 
    
 def test():  
     # thread1 = Fetch('get_match_details',0)  
     # thread2 = Fetch('get_match_history',1)  
     # thread1.start()  
-    thread2 = Fetch('items',1)  
+    thread2 = Fetch('items',1) 
+    thread2 = Fetch('heroes',1)  
     thread2.start()
     print('success!')  
     return  
