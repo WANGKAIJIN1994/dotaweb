@@ -29,7 +29,7 @@ def login():
             loginerror = 'user not find or password error';
         else:
             session['user'] = user[1]
-            return redirect('/index.html')
+            return redirect('/index')
     return render_template('login.html',
         error = loginerror)
 
