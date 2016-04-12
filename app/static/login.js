@@ -1,17 +1,17 @@
 function check(){
 	if(form_login.username.value == ""){
-		alert("请输入用户名");
+		alert("please enter the username");
 		return false;
 	}
 
 	if(form_login.password.value == ""){
-		alert("请输入密码");
+		alert("please enter the password");
 		return false;
 	}
 
 	if(document.getElementsByName("confirm")[0] != undefined){
 		if(form_login.confirm.value != form_login.password.value){
-			alert("两次输入的密码不一致");
+			alert("The two passwords do not match");
 			return false;
 		}
 	}
@@ -20,7 +20,7 @@ function check(){
 function show_Login(){
     document.getElementById("setRegister").innerHTML = "";
     document.getElementById("login").style.color = "white";
-    document.getElementById("switchLR").setAttribute("value","登录");
+    document.getElementById("switchLR").setAttribute("value","SignIn");
     document.form_login.action = "login";
 	 changebgimg();
 }
@@ -29,7 +29,7 @@ function show_Register(){
 	document.getElementById("setRegister").innerHTML = '<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="confirm" placeholder="确认密码:"/><br/>';
     document.getElementById("login").style.color = "rgb(204,204,204)";
     document.getElementById("register").style.color = "white";
-    document.getElementById("switchLR").setAttribute("value","注册");
+    document.getElementById("switchLR").setAttribute("value","Register");
     document.form_login.action = "register";
     changebgimg();
 }

@@ -29,7 +29,7 @@ def login():
             loginerror = 'user not find or password error';
         else:
             session['user'] = user[1]
-            return redirect('/index')
+            return redirect('/index.html')
     return render_template('login.html',
         error = loginerror)
 
@@ -54,3 +54,16 @@ def register():
 def logout():
     session.pop('user',None)
     return redirect('/index')
+
+
+@app.route("/competition")
+def competition():
+    return render_template("competition.html")
+
+@app.route("/goods")
+def goods():
+    return render_template("goods.html")
+
+@app.route("/hero")
+def hero():
+    return render_template("hero.html")
