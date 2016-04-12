@@ -3,7 +3,7 @@ import pymysql
 import traceback
 import hashlib
 import types
-
+import json
 
 def md5(str):
     if type(str) is bytes:
@@ -52,7 +52,7 @@ class dota2sql:
     except:
       traceback.print_exc()
 
-  def update_item(self,dic,table):
+  def insert_item(self,dic,table):
     try:
        sql = 'DELETE FROM ' + table
        self.exe(sql)

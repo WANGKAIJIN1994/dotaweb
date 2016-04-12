@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import dota2api
 import threading  
 import time
@@ -5,7 +6,7 @@ import dota
 
 D2_API_KEY = '0EB71FBD16527AF680B88D79067AF1B6'
 
-api = dota2api.Initialise(D2_API_KEY)
+api = dota2api.Initialise(api_key=D2_API_KEY,language='zh-CN')
 dotaapi = dota.dota2sql()
 
 class Fetch(threading.Thread): #The timer class is derived from the class threading.Thread  
@@ -28,30 +29,25 @@ class Fetch(threading.Thread): #The timer class is derived from the class thread
 
         if self.method == 'get_match_history':
             hist = api.get_match_history(account_id=params)
-            print(hist)
-            dotaapi.update_hist(hist)
+            # print(hist)
+            match_list = [i[match_id] for i in hist[matches]]
+            print(match_list)
+            # dotaapi.update_hist(hist)
 
         if self.method == 'items':
             item = api.get_game_items()
-            # for value in item['items']:
-            #     print(value['name'])
             dotaapi.insert_item(item,'items')
 
         if self.method == 'heroes':
-            item = api.get_game_heroes()
-            # for value in item['items']:
-            #     print(value['name'])
+            item = api.get_heroes()
             dotaapi.insert_item(item,'heroes')
 
    
 def test():  
-    # thread1 = Fetch('get_match_details',0)  
-    # thread2 = Fetch('get_match_history',1)  
-    # thread1.start()  
-    thread2 = Fetch('items',1) 
-    thread2 = Fetch('heroes',1)  
+    thread1 = Fetch('heroes',1)  
+    thread2 = Fetch('items',1)  
+    thread1.start()
     thread2.start()
-    print('success!')  
     return  
    
 if __name__ == '__main__':  
