@@ -57,13 +57,20 @@ body{
 	display:block;
 	font-size:13px;
     font-weight:300;
-    line-height:30px;
+    line-height:40px;
     background-color: rgba(70,175,95,1);
     color: #fff;
     border:0px;
     width:100px;
-    height: 30px;
+    height: 40px;
     cursor: pointer;
+}
+
+#obtain{
+	margin-top:-40px;
+	margin-left:220px;
+	width:80px;
+	float:left;
 }
 
 .btn-left{

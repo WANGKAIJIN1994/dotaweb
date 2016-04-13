@@ -67,3 +67,7 @@ def goods():
 @app.route("/hero")
 def hero():
     return render_template("hero.html")
+
+@app.route("/sendmail")
+def sendmail():
+    return '<h1>sending...</h1>'
