@@ -65,7 +65,7 @@ class dota2sql:
         col = col[:-1]
         val = val[:-1]
         sql = 'INSERT INTO `' + table + '` (' + col + ') VALUES (' + val + ');'
-        cul = self.exe(sql)
+        self.exe(sql)
     except:
       traceback.print_exc()
     print('update item success!')

@@ -6,7 +6,7 @@ import dota
 
 D2_API_KEY = '0EB71FBD16527AF680B88D79067AF1B6'
 
-api = dota2api.Initialise(api_key=D2_API_KEY,language='zh-CN')
+api = dota2api.Initialise(api_key=D2_API_KEY)
 dotaapi = dota.dota2sql()
 
 class Fetch(threading.Thread): #The timer class is derived from the class threading.Thread  
