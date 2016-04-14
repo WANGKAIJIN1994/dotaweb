@@ -7,3 +7,6 @@ dist
 build
 /flask/
 /venv/
+
+
+*.db
