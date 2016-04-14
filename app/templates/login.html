@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-	<title>Sign In</title>
-	<meta charset="UTF-8"/>
+{% extends "base.html" %}
+{% block title %}Sign In{% endblock %}
+{%block head%}
+	<meta charset="utf-8"/>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='login.css') }}"/>
     <script type="text/javascript" src="{{ url_for('static',filename='login.js') }}"></script>
-</head>
-<body>
+{%endblock%}
+{% block body %}
 	<script type="text/javascript">
     	var bgin = parseInt(Math.random()*5+1);
 		document.body.style.backgroundImage = "url(static/images/p_0"+bgin+".jpg)";
@@ -18,18 +17,17 @@
 	</div>
 	<div class="display">
 		<div class="selectlog">
-			<div id="login" onclick="show_Login()">登录</div><div id="line"></div><div id="register" onclick="show_Register()">注册</div>
+			<div id="login" onclick="show_Login()">SignIn</div><div id="line"></div><div id="register" onclick="show_Register()">Register</div>
 		</div>
 	    <img src="{{ url_for('static',filename='./images/max.png') }}" style="margin:10px;width:120px;" />
-	    <p style="margin-bottom:20px;color:#ccc;font-size: 14px;font-weight: 600;">第一游戏数据平台</p>
-	    <form name="form_login" action="" method="post">
-			<input onkeydown="switchline(event)" autofocus="autofocus" class="login-input all-radius" type="text" name="username" id="username" placeholder="用户名:" /><br/>
-			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="password" placeholder="密码:"/><br/>
-			<div id="error">{{error}}!</div>
+	    <p style="margin-bottom:20px;color:#ccc;font-size: 14px;font-weight: 600;">The first game data platform</p>
+	    <form name="form_login" action="login" method="post">
+			<input onkeydown="switchline(event)" autofocus="autofocus" class="login-input all-radius" type="text" name="username" id="username" placeholder="username:" /><br/>
+			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="password" placeholder="password:"/><br/>
+			<div id="error">{{error}}</div>
 			<div id="setRegister"></div>
-			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="登录" onclick="return check();" />
-			<input class="login-btn all-radius btn-right" type="reset" value="重置" onclick="changebgimg();" />
+			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="Sign In" onclick="return check();" />
+			<input class="login-btn all-radius btn-right" type="reset" value="Reset" onclick="changebgimg();" />
 		</form>
 	</div>
-</body>
-</html>
+{%endblock%}

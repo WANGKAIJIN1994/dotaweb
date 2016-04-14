@@ -76,9 +76,9 @@ body{
 #nav-heard ul>li>a{
 	display:block;
 	height:40px;
+	width:100px;
 	line-height: 40px;
-	padding-left:20px;
-	padding-right:20px;
+	text-align:center;
 	font-size: 14px;
 }
 
@@ -114,8 +114,16 @@ body{
     font-size: 13px;
 }
 
-.table .tr1{
+.table tr:nth-child(Odd){
 	background: rgba(12, 12, 12,0.7);
+}
+
+.table th:first-child{
+	border-radius: 0 0 0 15px;
+}
+
+.table th:last-child{
+	border-radius: 0 0 15px 0;
 }
 
 .table tr td{

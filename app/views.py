@@ -54,3 +54,16 @@ def register():
 def logout():
     session.pop('user',None)
     return redirect('/index')
+
+
+@app.route("/competition")
+def competition():
+    return render_template("competition.html")
+
+@app.route("/goods")
+def goods():
+    return render_template("goods.html")
+
+@app.route("/hero")
+def hero():
+    return render_template("hero.html")
