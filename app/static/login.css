@@ -1,0 +1,117 @@
+*{
+	margin:0px;
+	padding:0px;
+	font-family:"Microsoft YaHei";
+	font-size:12px;
+	text-decoration:none;
+}
+    
+body{
+	background-color:rgb(33,33,33);
+	background-image:url("images/p_01.jpg");
+	color:#ccc;
+}
+
+.nav{
+	width:100%;
+	height:50px;
+	background-color:rgba(10,10,10,0.15);
+    position:absolute;
+    top:0px;
+}
+
+.nav-head{
+	display:block;
+	margin:12px auto;
+	height:25px;
+}
+
+.display{
+	background-color:rgba(50, 50, 50, 0.6);
+	width:340px;
+	margin:10% auto;
+	padding:0px 0px 50px 0px;
+	text-align:center;
+}
+
+.all-radius{
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    border-bottom-left-radius:5px;
+    border-bottom-right-radius:5px;
+}
+
+.login-input {
+	display:block;
+    padding:10px;
+    background-color:rgba(255,255,255,0.95);
+    border:1px solid #fff;
+    margin:0 auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width:280px;
+}
+
+.login-btn{
+	display:block;
+	font-size:13px;
+    font-weight:300;
+    line-height:40px;
+    background-color: rgba(70,175,95,1);
+    color: #fff;
+    border:0px;
+    width:100px;
+    height: 40px;
+    cursor: pointer;
+}
+
+#obtain{
+	margin-top:-40px;
+	margin-left:220px;
+	width:80px;
+	float:left;
+}
+
+.btn-left{
+	float:left;
+	margin-left:30px;
+}
+
+.btn-right{
+	float:right;
+	margin-right:30px;
+}
+
+.selectlog{
+	height:50px;
+    border-bottom: 1px solid rgba(150,150,150,1);
+}
+
+#line{
+	display:inline-block;
+	width:1px;
+	height:50px;
+	background:rgba(150,150,150,1);
+}
+
+#login{
+	float: left;
+	font-size: 15px;
+	padding: 20px 0px;
+	margin-left:70px;
+	color: white;
+	cursor: pointer;
+}
+
+#register{ 
+	float: right;
+	font-size:15px;
+	padding: 20px 0;
+	margin-right:70px;
+	cursor: pointer;
+}
+
+#login:hover,#register:hover{
+	cursor: pointer;
+}
