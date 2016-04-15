@@ -7,6 +7,7 @@ function obtaincheck(){
 	}
 	else{
 		XMLHttp.sendRequest("POST","/sendmail","form_login.email.value");
+		return true;
 	}
 }
 
@@ -40,6 +41,7 @@ function show_Login(){
     document.getElementById("setRegister").innerHTML = "";
     document.getElementById("login").style.color = "white";
     document.getElementById("switchLR").setAttribute("value","SignIn");
+    document.getElementById("reset").setAttribute("value","FindPass");
     document.form_login.action = "login";
 	 changebgimg();
 }
@@ -50,10 +52,28 @@ function show_Register(){
     document.getElementById("login").style.color = "rgb(204,204,204)";
     document.getElementById("register").style.color = "white";
     document.getElementById("switchLR").setAttribute("value","Register");
+    document.getElementById("reset").setAttribute("value","reset");
     document.form_login.action = "register";
     document.getElementsByName("checknum")[0].style.width = "180px";
     document.getElementsByName("checknum")[0].style.margin = "0 -210px 0 30px";
     changebgimg();
+}
+
+function FindPassword(){
+	if (document.getElementById("reset").value == 'FindPass') {
+		form_login.password.type = 'email';
+		form_login.password.name = 'email';
+		form_login.email.placeholder = 'please enter your email';
+		form_login.reset.value = "AbtainPass";
+		form_login.reset.onclick = function(){
+		if(obtaincheck()){
+			location.href = "/"
+		}
+		}
+	};
+	if (document.form_login.action == 'reset') {
+		form_login.reset();
+	};
 }
 
 function switchline(event){
