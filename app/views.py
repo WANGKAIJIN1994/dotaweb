@@ -47,7 +47,9 @@ def register():
     return render_template('login.html',
         title = 'Sign In')
 
-
+@app.route('/findpass')
+def findpass():
+    return render_template('/findpass.html')
 
 #用户退出登录
 @app.route("/logout")
