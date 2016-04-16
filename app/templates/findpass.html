@@ -17,7 +17,7 @@
 	</div>
 	<div class="display">
 		<div class="selectlog">
-			<div id="login" onclick="show_Login()">SignIn</div><div id="line"></div><div id="register" onclick="show_Register()">Register</div>
+			<div style = "font-size:20px;height:30px;line-height:30px">Find Psssword</div>
 		</div>
 	    <img src="{{ url_for('static',filename='./images/max.png') }}" style="margin:10px;width:120px;" />
 	    <p style="margin-bottom:20px;color:#ccc;font-size: 14px;font-weight: 600;">The first game data platform</p>
@@ -25,9 +25,9 @@
 			<input onkeydown="switchline(event)" autofocus="autofocus" class="login-input all-radius" type="text" name="username" id="username" placeholder="username:" /><br/>
 			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="password" placeholder="password:"/><br/>
 			<div id="error">{{error}}</div>
-			<div id="setRegister"></div>
+			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="confirm" placeholder="confirm password:"/><br/>
 			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="Sign In" onclick="return check();" />
-			<input id="reset" class="login-btn all-radius btn-right" type="button" value="FindPass" onclick="FindPassword();" />
+			<input id="reset" class="login-btn all-radius btn-right" type="reset" value="Reset" />
 		</form>
 	</div>
 {%endblock%}
