@@ -4,8 +4,11 @@ from flask import request
 from flask_restful import Resource, Api
 import dota2api
 
+
 # dotaapi = dota2api.Initialise(language='zh-CN')
-dotaapi = dota2api.Initialise()
+KEY = '0EB71FBD16527AF680B88D79067AF1B6'
+
+dotaapi = dota2api.Initialise(KEY)
 
 
 app = Flask(__name__)
