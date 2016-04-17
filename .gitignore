@@ -5,8 +5,5 @@
 *.egg-info
 dist
 build
-/flask/
 /venv/
-
-
 *.db
