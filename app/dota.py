@@ -83,4 +83,12 @@ class dota2sql:
     sql = 'insert into `users` (`username`,`password`) VALUES ( "'+ username +'" , "'+md5((username + password + '+5').encode('utf-8'))+'");'
     return self.exe(sql)
 
+  def get_heroes(self):
+    sql = 'SELECT * FROM `heroes`;'
+    return self.query(sql)
 
+if __name__ == '__main__':
+  dsql = dota2sql()
+  result = dsql.get_heroes()
+  if len(result) > 0:
+    print(result)
