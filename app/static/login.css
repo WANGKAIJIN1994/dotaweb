@@ -5,7 +5,7 @@
 	font-size:12px;
 	text-decoration:none;
 }
-    
+
 body{
 	background-color:rgb(33,33,33);
 	background-image:url("images/p_01.jpg");
@@ -57,20 +57,13 @@ body{
 	display:block;
 	font-size:13px;
     font-weight:300;
-    line-height:40px;
+    line-height:30px;
     background-color: rgba(70,175,95,1);
     color: #fff;
     border:0px;
     width:100px;
-    height: 40px;
+    height: 30px;
     cursor: pointer;
-}
-
-#obtain{
-	margin-top:-40px;
-	margin-left:220px;
-	width:80px;
-	float:left;
 }
 
 .btn-left{

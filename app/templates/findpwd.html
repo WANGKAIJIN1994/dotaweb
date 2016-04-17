@@ -18,24 +18,17 @@
 	</div>
 	<div class="display">
 		<div class="selectlog">
-			<div id="login" onclick="show_Login()">SignIn</div><div id="line"></div><div id="register" onclick="show_Register()">Register</div>
+			<div style = "font-size:20px;height:30px;line-height:30px">Find Psssword</div>
 		</div>
 	    <img src="{{ url_for('static',filename='./images/max.png') }}" style="margin:10px;width:120px;" />
 	    <p style="margin-bottom:20px;color:#ccc;font-size: 14px;font-weight: 600;">The first game data platform</p>
-	    <form name="form_login" action="login" method="post">
-			<input onkeydown="switchline(event)" autofocus="autofocus" class="login-input all-radius" type="text" name="username" id="username" placeholder="username:" /><br/>
+	    <form name="form_login" action="pwdChange" method="post">
+			<input onkeydown="switchline(event)" autofocus="autofocus" class="login-input all-radius" type="text" name="email" id="username" placeholder="email:" /><br/>
 			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="password" placeholder="password:"/><br/>
-			<div id="setRegister"></div>
-			{% with messages = get_flashed_messages() %}
-			{% if messages %}
-			{% for message in messages %}
-			<div id="error">{{message}}</div>
-			{% endfor %}
-		    {% endif %}
-		    {% endwith %}
-			<div><a style="color:white;" href="http://localhost:5000/pwdChange">forget password</a></div>
-			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="Sign In" onclick="return check();" />
-			<input class="login-btn all-radius btn-right" type="reset" value="Reset" onclick="changebgimg();" />
+			<div id="error">{{error}}</div>
+			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="confirm" placeholder="confirm password:"/><br/>
+			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="submit" onclick="return check();" />
+			<input id="reset" class="login-btn all-radius btn-right" type="reset" value="Reset" />
 		</form>
 	</div>
 </body>

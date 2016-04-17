@@ -86,6 +86,14 @@ class dota2sql:
   def get_heroes(self):
     sql = 'SELECT * FROM `heroes`;'
     return self.query(sql)
+    
+  def changepwd(self,email,password):
+    sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
+    data = self.query(sql)
+    username = data[0][1]
+    sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
+    data = self.exe(sql)
+    return data
 
 if __name__ == '__main__':
   dsql = dota2sql()

@@ -1,56 +1,64 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html>
 <head>
-{% block head %}
-	<meta charset="utf-8"/>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index.css') }}">
-	<title>{% block title %}{% endblock %}-DotaMax</title>
-{% endblock %}
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <title>Index</title>
+   <link href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+   <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
+   <script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
 </head>
-<body>
-{% block body %}
-	<heard>
-	{% block heard %}
-	    {% block information %}
-		<div class="nav-logo">
-			<img class="user-avatar" src="{ url_for('static',filename='images/default_avatar.png') }"/>
-			<div class="user-infor">
-				<p class="row">
-					<span class="label">当前账号</span>
-					<span class="content">替换</span>
-				</p>
-				<p class="row">
-					<span class="label">MAX ID</span>
-					<span class="content">替换</span>
-				</p>
-				<p class="row">
-					<span class="label">昵称</span>
-					<span class="content">替换</span>
-				</p>
-				<p class="row">
-					<span class="label">Steam ID</span>
-					<span class="content">替换替换替换替换</span>
-				</p>
-			</div>
-		</div>
-		{% endblock %}
-		{% block nav %}
-		<nav id="nav-heard">
-			<ul>
-				<li><a href="index">综合统计</a></li>
-				<li><a href="hero">英雄统计</a></li>
-				<li><a href="goods">物品统计</a></li>
-				<li><a href="competition">比赛统计</a></li>
-			</ul>
-		</nav>
-		{% endblock %}
-	{% endblock %}
-	</heard>
-	<section class="wrap">
-	{% block wrap %}
-	{% endblock %}
-	</section> 
-{% endblock %}
-<script type="text/javascript" src="{{ url_for('static',filename='index.js') }}"></script>
+<body style = "background-color:#222222">
+
+
+<!-- header -->
+<div style = "background-color:#111111; color:white">
+   <nav class="navbar" role="navigation">
+   <div class="navbar-header">
+      <a class="navbar-brand col-md-offset-12" href="#">Dodata</a>
+   </div>
+
+   <div class="col-md-offset-2" >
+      <ul class="nav navbar-nav" >
+         <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data</a>
+               <ul class="dropdown-menu">
+                  <li><a href="#">Hero</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Goods</a></li>
+               </ul>
+          </li>
+          <li><a href="#">Players</a></li>
+          <li><a href="#">Matches</a></li>
+        </ul>
+      </div>
+      <div class="col-md-offset-10">
+		    <ul class="nav navbar-nav">
+		    	<li class="dropdown">
+            		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> User</a>
+		               <ul class="dropdown-menu">
+		                  <li><a href="/logout">logout</a></li>
+		                  <li class="divider"></li>
+		                  <li><a href="#">setting</a></li>
+		               </ul>
+          		</li>
+		    </ul>
+      </div>
+   </nav>
+</div>
+   <!-- header -->
+   
+	{% block content %}{% endblock %}
+
+
+   <!-- footer -->
+	<nav class="navbar navbar-default navbar-fixed-bottom" style="background-color:#111111">
+	    <div class="navbar-inner navbar-content-center  col-md-2 col-md-offset-5">
+	        <p class="text-muted credit" style="padding: 10px;">copyright&copy;2016&nbsp;Dodata</p>
+	    </div>
+	</nav>
+   <!-- footer -->
+</div>
+
+
 </body>
 </html>

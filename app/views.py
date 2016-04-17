@@ -1,5 +1,8 @@
-from flask import render_template,  redirect, session, url_for, request
+from flask import render_template,  redirect, session, url_for, request,flash
 from app import app, dota
+import smtplib  
+from email.mime.text import MIMEText  
+import base64
 
 
 @app.route("/")
@@ -26,12 +29,12 @@ def login():
         password = request.form["password"] 
         user =  dotauser.login(username,password)
         if user == 'USER_NOT_FIND' or user == 'PASSWORD_ERROR':
-            loginerror = 'user not find or password error';
+            #loginerror = 'user not find or password error';
+            flash('user not find or password error')
         else:
             session['user'] = user[1]
             return redirect('/index')
-    return render_template('login.html',
-        error = loginerror)
+    return render_template('login.html')
 
 
 
@@ -39,17 +42,32 @@ def login():
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     dotauser = dota.dota2sql()
+    go = 1
+    registererror=''
     if request.method == 'POST':
         username = request.form["username"] 
         password = request.form["password"] 
-        dotauser.register(username,password)
-        return redirect('/login')
-    return render_template('login.html',
-        title = 'Sign In')
+        email = request.form["email"] 
 
-@app.route('/findpass')
-def findpass():
-    return render_template('/findpass.html')
+        sql = 'select `uid`,`username`,`password` from `users` where `username` = "' + username + '";'
+        data = dotauser.sqlexe(sql) 
+        if  data :
+            go = 0
+            #registererror = 'This user name has been registered';  
+            flash('This user name has been registered')
+        sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
+        data = dotauser.sqlexe(sql) 
+        if  data :
+            go = 0
+            #registererror = 'This email has been registered';
+            flash('This email has been registered')
+        if go == 1:
+            sendEmail(username, password, email)    
+            return redirect('/login')
+    return render_template('login.html',
+        error = registererror)
+
+
 
 #用户退出登录
 @app.route("/logout")
@@ -58,18 +76,83 @@ def logout():
     return redirect('/index')
 
 
-@app.route("/competition")
-def competition():
-    return render_template("competition.html")
 
-@app.route("/goods")
-def goods():
-    return render_template("goods.html")
 
-@app.route("/hero")
-def hero():
-    return render_template("hero.html")
+#注册激活的函数
+@app.route("/commitRegister")
+def commitRegister():
+    dotauser = dota.dota2sql()
+    username = request.args.get('name','')
+    password = request.args.get('password','')
+    email = request.args.get('email','')
+    dotauser.register(jiemi(username),jiemi(password),jiemi(email))
+    return redirect('/login')
 
-@app.route("/sendmail")
-def sendmail():
-    return '<h1>sending...</h1>'
+#更改密码
+@app.route("/pwdChange", methods = ['GET', 'POST'])
+def pwdChange():
+    if request.method == 'POST':
+        password = request.form["password"] 
+        email = request.form["email"] 
+
+        sender = '18233698150@163.com'  
+        message = 'password='+jiami(password)+'&email='+jiami(email)
+        receiver = email
+        subject = 'dodata email'  
+        smtpserver = 'smtp.163.com'  
+        username = '18233698150'  
+        password = '1000121143'      
+        msg = MIMEText('<html><h1>你好,请点击链接完成登录</h1><p>http://localhost:5000/pwdChangeEmail?'+message+'</p></html>','html','utf-8')      
+        msg['Subject'] = subject       
+        smtp = smtplib.SMTP()  
+        smtp.connect('smtp.163.com')  
+        smtp.login(username, password)  
+        smtp.sendmail(sender, receiver, msg.as_string())  
+        smtp.quit()   
+        return redirect('/login')
+    return render_template('findpwd.html')
+
+
+#找回密码发送邮件
+@app.route("/pwdChangeEmail")
+def pwdChangeEmail():
+    password = request.args.get('password','')
+    email = request.args.get('email','')
+    dotauser = dota.dota2sql()
+    dotauser.changepwd(jiemi(email),jiemi(password))
+    return redirect('/login')
+
+
+    
+
+
+#发送邮件的函数，用于注册时候使用
+def sendEmail(username, password, email) :   
+   
+    sender = '18233698150@163.com'  
+    message = 'name='+jiami(username)+'&'+'password='+jiami(password)+'&'+'email='+jiami(email)
+    receiver = email
+    subject = 'dodata email'  
+    smtpserver = 'smtp.163.com'  
+    username = '18233698150'  
+    password = '1000121143'      
+    msg = MIMEText('<html><h1>你好,请点击链接完成登录</h1><p>http://localhost:5000/commitRegister?'+message+'</p></html>','html','utf-8')      
+    msg['Subject'] = subject       
+    smtp = smtplib.SMTP()  
+    smtp.connect('smtp.163.com')  
+    smtp.login(username, password)  
+    smtp.sendmail(sender, receiver, msg.as_string())  
+    smtp.quit() 
+
+
+
+#加密算法
+def jiami(str):
+    b = base64.encodestring(bytes(str, 'utf-8'))
+    return b.decode()
+
+
+#解密算法
+def jiemi(str):
+     c = base64.decodestring(str.encode())
+     return c.decode()
