@@ -52,6 +52,32 @@ class dota2sql:
     except:
       traceback.print_exc()
 
+
+    #闫正阳，这个函数不能运行成功，
+    #因为我没有更改sqlexe函数为exe，
+    #我在views.py中使用过sqlexe函数
+    #如果在这里更改函数名会导致我view.py这种更改很多，
+    #所以这个函数不会运行成功
+  def insert_item(self,dic,table):
+    try:
+       sql = 'DELETE FROM ' + table
+       self.exe(sql)
+       for value in dic[table]:
+        col = ''
+        val = ''
+        for k,v in value.items():
+          col += '`' + k + '`,'
+          val += '\"' + v + '\",' if isinstance(v,str) else str(v) + ','
+        col = col[:-1]
+        val = val[:-1]
+        sql = 'INSERT INTO `' + table + '` (' + col + ') VALUES (' + val + ');'
+        self.exe(sql)
+    except:
+      traceback.print_exc()
+    print('update item success!')
+
+
+
   def login(self,username,password):
     sql = 'select `uid`,`username`,`password` from `users` where `username` = "' + username + '";'
     data = self.sqlexe(sql)
