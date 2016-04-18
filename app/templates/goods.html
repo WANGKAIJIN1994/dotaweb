@@ -1,47 +1,41 @@
+<!-- extend base layout -->
 {% extends "base.html" %}
-{% block title %}goods{% endblock %}
-{% block wrap %}
-<table class="table">
-<caption>物品统计</caption>
-<tr>
-	<th style="width:16%;">物品</th>
-	<th style="width:16%;">使用次数</th>
-	<th style="width:16%;">胜率</th>
-	<th style="width:16%;">KDA(K/D/A)</th>
-	<th style="width:16%;">金钱分钟</th>
-	<th style="width:16%;">经验分钟</th>
-</tr>
-<tr>
-	<td><img class="td-img" src="images/tpscroll_lg.png"/>回城卷轴</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-<tr class="tr1">
-	<td><img class="td-img" src="images/magic_wand_lg.png"/>回城卷轴</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-<tr>
-	<td><img class="td-img" src="images/tpscroll_lg.png"/>回城卷轴</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-<tr class="tr1">
-	<td><img class="td-img" src="images/magic_wand_lg.png"/>回城卷轴</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-</table> 
-{% endblock %}
+
+{% block content %}
+   <div class="container" >
+    	<!-- left -->
+		<div class="panel panel-default col-sm-8"  style = "background-color:#111111;color:white">
+		   <table class="table">
+		      <th>ID</th><th>name </th><th>cost</th><th>picture</th>
+		      {% for item in items %}
+		      <tr><td>{{ item[0] }}</td><td>{{ item[5] }}</td><td>{{ item[6] }}</td><td><img src="{{ item[7] }}"/></td></tr>
+		      {% endfor %}
+		   </table>
+		</div>
+		<!-- left over -->
+
+		<!-- right -->
+		<div class="list-group col-sm-3 pull-right" style = "margin:0 auto;text-align:center;">
+			
+			<div class="list-group-item active" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         <span class="glyphicon glyphicon-user"></span>User Information
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+				<img src="{{ url_for('static',filename='images/user.png') }}" class="img-circle" />
+			</div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         first information
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         second information
+		      </h4>
+		   </div>
+		</div>
+		<!-- right over -->
+	</div>
+  {% endblock %}

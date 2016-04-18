@@ -1,8 +1,7 @@
 from flask import render_template,  redirect, session, url_for, request,flash
 from app import app, dota
-import smtplib  
+import smtplib, base64  
 from email.mime.text import MIMEText  
-import base64
 
 
 @app.route("/")
@@ -143,6 +142,25 @@ def sendEmail(username, password, email) :
     smtp.login(username, password)  
     smtp.sendmail(sender, receiver, msg.as_string())  
     smtp.quit() 
+
+#hero
+@app.route("/heroes", methods = ['GET', 'POST'])
+def hero():
+    dotauser = dota.dota2sql()
+    heroes = dotauser.get_heroes();
+    return render_template('hero.html',
+        title = 'Heroes',
+        heroes = heroes,
+        user = session['user'])
+#goods
+@app.route("/goods", methods = ['GET', 'POST'])
+def goods():
+    dotauser = dota.dota2sql()
+    items = dotauser.get_items();
+    return render_template('goods.html',
+        title = 'Goods',
+        items = items,
+        user = session['user'])
 
 
 

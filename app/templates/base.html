@@ -2,7 +2,11 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-   <title>Index</title>
+   {% if title %}
+    <title>{{title}} - Dodata</title>
+    {% else %}
+    <title>Dodata</title>
+    {% endif %}
    <link href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
    <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
    <script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
@@ -14,7 +18,7 @@
 <div style = "background-color:#111111; color:white">
    <nav class="navbar" role="navigation">
    <div class="navbar-header">
-      <a class="navbar-brand col-md-offset-12" href="#">Dodata</a>
+      <a class="navbar-brand col-md-offset-12" href="/">Dodata</a>
    </div>
 
    <div class="col-md-offset-2" >
@@ -22,9 +26,9 @@
          <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data</a>
                <ul class="dropdown-menu">
-                  <li><a href="#">Hero</a></li>
+                  <li><a href="/heroes">Hero</a></li>
                   <li class="divider"></li>
-                  <li><a href="#">Goods</a></li>
+                  <li><a href="/goods">Goods</a></li>
                </ul>
           </li>
           <li><a href="#">Players</a></li>
@@ -34,7 +38,7 @@
       <div class="col-md-offset-10">
 		    <ul class="nav navbar-nav">
 		    	<li class="dropdown">
-            		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> User</a>
+            		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{user}}</a>
 		               <ul class="dropdown-menu">
 		                  <li><a href="/logout">logout</a></li>
 		                  <li class="divider"></li>
