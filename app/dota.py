@@ -3,7 +3,7 @@ import pymysql
 import traceback
 import hashlib
 import types
-
+import json
 
 def md5(str):
     if type(str) is bytes:
@@ -32,7 +32,7 @@ class dota2sql:
     except:
       traceback.print_exc()
 
-  def query(self,sql):
+  def __query(self,sql):
     try:
       cur = self.conn.cursor()
       cur.execute(sql)
@@ -42,19 +42,37 @@ class dota2sql:
     except:
       traceback.print_exc()
 
-  def sqlexe(self,sql):
+  def __exe(self,sql):
     try:
       cur = self.conn.cursor()
-      cur.execute(sql)
-      data = cur.fetchall()
+      cul= cur.execute(sql)
+      self.conn.commit()
       cur.close()
-      return data
+      return cul          #返回受影响的行数
     except:
       traceback.print_exc()
 
+  def insert_item(self,dic,table):
+    try:
+       sql = 'DELETE FROM ' + table
+       self.__exe(sql)
+       for value in dic[table]:
+        col = ''
+        val = ''
+        for k,v in value.items():
+          col += '`' + k + '`,'
+          val += '\"' + v + '\",' if isinstance(v,str) else str(v) + ','
+        col = col[:-1]
+        val = val[:-1]
+        sql = 'INSERT INTO `' + table + '` (' + col + ') VALUES (' + val + ');'
+        self.__exe(sql)
+    except:
+      traceback.print_exc()
+    print('update item success!')
+
   def login(self,username,password):
     sql = 'select `uid`,`username`,`password` from `users` where `username` = "' + username + '";'
-    data = self.sqlexe(sql)
+    data = self.__query(sql)
     if not data:
       return 'USER_NOT_FIND' 
     if md5((username + password + '+5').encode('utf-8')) == data[0][2]:
@@ -62,26 +80,31 @@ class dota2sql:
     return 'PASSWORD_ERROR'
 
   def register(self,username,password,email):
-    sql = 'insert into `users` (`username`,`password`,`email`) VALUES ( "'+ username +'" , "'+md5((username + password + '+5').encode('utf-8'))+'","'+email+'");'
-    cur = self.conn.cursor()
-    data = cur.execute(sql)
-    self.conn.commit()
-    return data
-
-  def changepwd(self,email,password):
-    sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
-    data = self.sqlexe(sql)
-    username = data[0][1]
-    sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
-    cur = self.conn.cursor()
-    data = cur.execute(sql)
-    self.conn.commit()
-    return data
+    sql = 'SELECT * FROM `users` WHERE `username` = ' + username + 'OR `email` = ' + email + ';'
+    data = self.__query(sql)
+    if len(data) > 0:
+        return 'ERROR'
+    sql = 'insert into `users` (`username`,`password`,`email`) VALUES ( "'+ username +'" , "'+md5((username + password + '+5').encode('utf-8'))+'","' + email + '");'
+    return self.__exe(sql)
 
   def get_heroes(self):
     sql = 'SELECT * FROM `heroes`;'
-    return self.query(sql)
+    return self.__query(sql)
 
   def get_items(self):
     sql = 'SELECT * FROM `items`;'
-    return self.query(sql)
+    return self.__query(sql)
+    
+  def changepwd(self,email,password):
+    sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
+    data = self.__query(sql)
+    username = data[0][1]
+    sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
+    data = self.__exe(sql)
+    return data
+
+if __name__ == '__main__':
+  dsql = dota2sql()
+  result = dsql.get_heroes()
+  if len(result) > 0:
+    print(result)
