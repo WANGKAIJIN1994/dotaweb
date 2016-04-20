@@ -79,13 +79,23 @@ class dota2sql:
       return data[0]
     return 'PASSWORD_ERROR'
 
+  #注册时将数据提交到数据库
   def register(self,username,password,email):
-    sql = 'SELECT * FROM `users` WHERE `username` = ' + username + 'OR `email` = ' + email + ';'
-    data = self.__query(sql)
-    if len(data) > 0:
-        return 'ERROR'
     sql = 'insert into `users` (`username`,`password`,`email`) VALUES ( "'+ username +'" , "'+md5((username + password + '+5').encode('utf-8'))+'","' + email + '");'
     return self.__exe(sql)
+
+  #注册时用于验证是否该用户名或者邮箱已经存在
+  def judgeUser(self,username,email):
+    sql = 'select * FROM `users` WHERE `username` = "' + username + '" ;'
+    data = self.__query(sql)
+    if len(data) > 0:
+        return 'USERNAME_EXIST'
+    sql = 'select * FROM `users` WHERE `email` = "' + email  + '";'
+    data = self.__query(sql)
+
+    if len(data) > 0:
+        return 'EMAIL_EXIST'
+    return 'NOTHING_EXIST'
 
   def get_heroes(self):
     sql = 'SELECT * FROM `heroes`;'
@@ -104,8 +114,8 @@ class dota2sql:
     data = self.__query(sql)
     username = data[0][1]
     sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
-    data = self.__exe(sql)
-    return data
+    self.__exe(sql)
+
 
 if __name__ == '__main__':
   dsql = dota2sql()

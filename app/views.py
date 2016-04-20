@@ -47,20 +47,14 @@ def register():
         username = request.form["username"] 
         password = request.form["password"] 
         email = request.form["email"] 
-
-        sql = 'select `uid`,`username`,`password` from `users` where `username` = "' + username + '";'
-        data = dotauser.sqlexe(sql) 
-        if  data :
+        backdata = dotauser.judgeUser(username,email)
+        if  backdata == 'EMAIL_EXIST':
             go = 0
-            #registererror = 'This user name has been registered';  
-            flash('This user name has been registered')
-        sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
-        data = dotauser.sqlexe(sql) 
-        if  data :
-            go = 0
-            #registererror = 'This email has been registered';
             flash('This email has been registered')
-        if go == 1:
+        if  backdata == 'USERNAME_EXIST':
+            go = 0
+            flash('This username has been registered')
+        if backdata == 'NOTHING_EXIST':
             sendEmail(username, password, email)    
             return redirect('/login')
     return render_template('login.html',
@@ -90,25 +84,30 @@ def commitRegister():
 #更改密码
 @app.route("/pwdChange", methods = ['GET', 'POST'])
 def pwdChange():
+    dotauser = dota.dota2sql()
     if request.method == 'POST':
         password = request.form["password"] 
         email = request.form["email"] 
-
-        sender = '18233698150@163.com'  
-        message = 'password='+jiami(password)+'&email='+jiami(email)
-        receiver = email
-        subject = 'dodata email'  
-        smtpserver = 'smtp.163.com'  
-        username = '18233698150'  
-        password = '1000121143'      
-        msg = MIMEText('<html><h1>你好,请点击链接完成登录</h1><p>http://localhost:5000/pwdChangeEmail?'+message+'</p></html>','html','utf-8')      
-        msg['Subject'] = subject       
-        smtp = smtplib.SMTP()  
-        smtp.connect('smtp.163.com')  
-        smtp.login(username, password)  
-        smtp.sendmail(sender, receiver, msg.as_string())  
-        smtp.quit()   
-        return redirect('/login')
+        username = '*'
+        backdata = dotauser.judgeUser(username,email)
+        if backdata == 'NOTHING_EXIST':
+            flash('This email do not exist')
+        else:
+            sender = '18233698150@163.com'  
+            message = 'password='+jiami(password)+'&email='+jiami(email)
+            receiver = email
+            subject = 'dodata email'  
+            smtpserver = 'smtp.163.com'  
+            username = '18233698150'  
+            password = '1000121143'      
+            msg = MIMEText('<html><h1>你好,请点击链接完成修改密码</h1><p>http://localhost:5000/pwdChangeEmail?'+message+'</p></html>','html','utf-8')      
+            msg['Subject'] = subject       
+            smtp = smtplib.SMTP()  
+            smtp.connect('smtp.163.com')  
+            smtp.login(username, password)  
+            smtp.sendmail(sender, receiver, msg.as_string())  
+            smtp.quit()   
+            return redirect('/login')
     return render_template('findpwd.html')
 
 
