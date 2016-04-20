@@ -147,9 +147,11 @@ def sendEmail(username, password, email) :
 def hero():
     dotauser = dota.dota2sql()
     heroes = dotauser.get_heroes();
+    abilities = dotauser.get_heroes_abilities();
     return render_template('hero.html',
         title = 'Heroes',
         heroes = heroes,
+        abilities = abilities,
         user = session['user'])
 #goods
 @app.route("/goods", methods = ['GET', 'POST'])

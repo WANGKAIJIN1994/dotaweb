@@ -7,9 +7,21 @@
 		<div class="panel panel-default col-sm-8"  style = "background-color:#111111;color:white">
 		   <table class="table">
   			  
-		      <th>ID</th><th>Name </th><th>Picture</th>
+		      <th>Picture</th><th>Name </th><th>Abilities</th>
 		      {% for hero in heroes %}
-		      <tr><td>{{ hero[0] }}</td><td>{{ hero[2] }}</td><td><img src="{{ hero[3] }}"/></td></tr>
+		      <tr>
+		      	<td><img width="200" height="200" src="{{ hero[6] }}"/></td>
+		      	<td>{{hero[2]}}</td>
+		      	<td>
+		      		{% for ability in abilities %}
+		      		{% if ability[2] in hero %}
+		      		<div>
+		      		<img width="50" height="50" src="http://cdn.dota2.com.cn/apps/dota2/images/abilities/{{ability[1]}}_lg.png"/>
+		      		</div>
+		      		{% endif %}
+		      		{% endfor %}
+		      	</td>
+		      </tr>
 		      {% endfor %}
 
 		   </table>
