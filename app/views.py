@@ -1,6 +1,6 @@
 from flask import render_template,  redirect, session, url_for, request,flash
 from app import app
-import dota
+from dota2sql import Dota2SQL
 import smtplib, base64  
 from email.mime.text import MIMEText  
 
@@ -20,7 +20,7 @@ def index():
 #用户登录
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     loginerror = ''
     if session.get('user') is not None:
        return redirect('/index')
@@ -41,7 +41,7 @@ def login():
 #用户注册
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     go = 1
     registererror=''
     if request.method == 'POST':
@@ -75,7 +75,7 @@ def logout():
 #注册激活的函数
 @app.route("/commitRegister")
 def commitRegister():
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     username = request.args.get('name','')
     password = request.args.get('password','')
     email = request.args.get('email','')
@@ -85,7 +85,7 @@ def commitRegister():
 #更改密码
 @app.route("/pwdChange", methods = ['GET', 'POST'])
 def pwdChange():
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     if request.method == 'POST':
         password = request.form["password"] 
         email = request.form["email"] 
@@ -117,7 +117,7 @@ def pwdChange():
 def pwdChangeEmail():
     password = request.args.get('password','')
     email = request.args.get('email','')
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     dotauser.changepwd(jiemi(email),jiemi(password))
     return redirect('/login')
 
@@ -146,7 +146,7 @@ def sendEmail(username, password, email) :
 #hero
 @app.route("/heroes", methods = ['GET', 'POST'])
 def hero():
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     heroes = dotauser.get_heroes();
     abilities = dotauser.get_heroes_abilities();
     return render_template('hero.html',
@@ -157,7 +157,7 @@ def hero():
 #goods
 @app.route("/goods", methods = ['GET', 'POST'])
 def goods():
-    dotauser = dota.dota2sql()
+    dotauser = Dota2SQL()
     items = dotauser.get_items();
     return render_template('goods.html',
         title = 'Goods',

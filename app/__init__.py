@@ -6,4 +6,4 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 from app import views
-import dota
+import dota2sql

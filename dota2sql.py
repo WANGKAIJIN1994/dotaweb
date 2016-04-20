@@ -4,6 +4,13 @@ import traceback
 import hashlib
 import types
 import json
+import dota2api
+import threading  
+import time
+
+D2_API_KEY = '0EB71FBD16527AF680B88D79067AF1B6'
+
+api = dota2api.Initialise(api_key=D2_API_KEY)
 
 def md5(str):
     if type(str) is bytes:
@@ -39,7 +46,7 @@ def get_insert_sql(dic):
     return '(' + col + ') VALUES (' + val + ');'
 
 
-class dota2sql:
+class Dota2SQL:
   def __init__(self,host='ali.banixc.com',user='dota',passwd='dotaer',db='dota',port=3306,charset='utf8'):
     self.host = host
     self.user = user
@@ -101,8 +108,6 @@ class dota2sql:
     steamid=int(dic['steamid'])
     sql = 'REPLACE INTO `steam` %s' % get_insert_sql(dic)
     return self.__exe(sql)
-
-    # return self.__exe(sql)
 ### 以上函数请勿调用
 
 ### 以下函数可供View层调用
@@ -133,6 +138,13 @@ class dota2sql:
         return 'EMAIL_EXIST'
     return 'NOTHING_EXIST'
 
+  def changepwd(self,email,password):
+    sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
+    data = self.__query(sql)
+    username = data[0][1]
+    sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
+    self.__exe(sql)
+
   def get_heroes(self):
     sql = 'SELECT * FROM `heroes`;'
     return self.__query(sql)
@@ -144,13 +156,6 @@ class dota2sql:
   def get_items(self):
     sql = 'SELECT * FROM `items`;'
     return self.__query(sql)
-    
-  def changepwd(self,email,password):
-    sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
-    data = self.__query(sql)
-    username = data[0][1]
-    sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
-    self.__exe(sql)
 
   def get_watch_list(self,uid):
     sql = 'SELECT * FROM `watchs` WHERE `uid` = %d;' % uid;
@@ -176,63 +181,29 @@ class dota2sql:
       sql = 'UPDATE `users` SET `steamid` = %d WHERE `uid` = %d' % (steamid,uid) 
       return self.__exe(sql)
 
-
-
-
-
-
-
-# -*- coding: utf-8 -*-
-import dota2api
-import threading  
-import time
-
-D2_API_KEY = '0EB71FBD16527AF680B88D79067AF1B6'
-
-api = dota2api.Initialise(api_key=D2_API_KEY)
-sql = dota2sql()
+  def set_account_id(self,uid,account_id):
+      sql = 'UPDATE `users` SET `account_id` = %d WHERE `uid` = %d' % (account_id,uid) 
+      return self.__exe(sql)
 
 class Fetch(threading.Thread): #The timer class is derived from the class threading.Thread  
     def __init__(self, method, **kwargs):  
         threading.Thread.__init__(self)  
         self.method = method  
         self.kwargs = kwargs
-
+        self.dsql = Dota2SQL()
         # self.thread_stop = False  
    
     def run(self): #Overwrite run() method, put what you want the thread do here  
-        # while not self.thread_stop:  
-            # print 'Thread Object(%d), Time:%s\n' %(self.thread_num, time.ctime())  
-            # time.sleep(self.interval)  
-    # def stop(self):  
-    #     self.thread_stop = True  
-        # if self.method == 'get_match_details':
-            # match = api.get_match_details(match_id=self.params)
-            # print(match)
-
         if self.method == 'get_match_history':
             self.get_match_history()
 
         if self.method == 'get_player_summaries':
             self.get_player_summaries()
 
-
-    def get_necessary_params(self,*args):
-        dic = {}
-        for params in args:
-            # if params not in self.kwargs:
-            #     raise TypeError('missing necessary argument '+ params)
-            dic[params] = self.kwargs[params]
-            self.kwargs[params] = None
-        return dic
-
     def get_player_summaries(self):
-        # params = self.get_necessary_params('steamid')
-        # return api.get_player_summaries(params['steamid'])
         data = api.get_player_summaries(**self.kwargs)
         if len(data['players']) > 0:
-            sql.update_steam_msg(data['players'][0])
-
+            self.dsql.update_steam_msg(data['players'][0])
 
     def get_match_history(self):
         match = api.get_match_history(self.get_necessary_params('account_id'))
@@ -242,31 +213,20 @@ class Fetch(threading.Thread): #The timer class is derived from the class thread
 
 
    
-# def test():  
-#     # thread1 = Fetch('heroes',1)  
-#     # thread2 = Fetch('items',1)  
-#     # thread1.start()
-#     # thread2.start()
-#     # thread3 = Fetch('get_match_details','1000193456').start()
-#     thread4 = Fetch(method='get_player_summaries',steamids=76561198121063498).start()
-#     # thread5 = Fetch('get_match_history',account_id=76482434).start()
+def test():  
+    # thread1 = Fetch('heroes',1)  
+    # thread2 = Fetch('items',1)  
+    # thread1.start()
+    # thread2.start()
+    # thread3 = Fetch('get_match_details','1000193456').start()
+    thread4 = Fetch(method='get_player_summaries',steamids=76561198121063498).start()
+    # thread5 = Fetch('get_match_history',account_id=76482434).start()
 
-#     return  
+def test2():
+    dsql = Dota2SQL()
+    print(dsql.set_account_id(31,1232131123))
    
-# if __name__ == '__main__':  
-#     test()
-
-
-
-
-# ### 调试用
-# if __name__ == '__main__':
-#   dsql = dota2sql()
-#   # print(dsql.add_watch_list(uid = 20,game_id=100))
-#   # print(dsql.get_watch_list(uid = 20))
-#   # print(dsql.get_steam_msg(76561198121063498))
-#   # if len(result) > 0
-
-#   # print(get_insert_sql(dic))
-#   # print(dsql.register('a','b','123'))
-#   print(dsql.set_steam_id(31,76561198121063198))
+if __name__ == '__main__':  
+    # test()
+    test2()
+    pass

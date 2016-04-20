@@ -8,3 +8,4 @@ build
 /venv/
 *.db
 
+makesql/all.sql
