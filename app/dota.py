@@ -4,6 +4,7 @@ import traceback
 import hashlib
 import types
 import json
+import fetch
 
 def md5(str):
     if type(str) is bytes:
@@ -12,6 +13,32 @@ def md5(str):
         return m.hexdigest()
     else:
         return ''
+
+#该函数用于将其自动转换为int并判断是否加''
+def get_value_sql(val):
+    if isinstance(val,int):
+        return(str(val)) 
+    if isinstance(val,str):
+        if str.isdigit(val):
+            return str(val)
+    return '"%s"' % val
+
+def get_update_sql(dic):
+    sql = ''
+    for k,v in dic.items():
+      sql += '`' + k + '`= ' + get_value_sql(v) + ','
+    return sql[:-1]
+
+def get_insert_sql(dic):
+    col = ''
+    val = ''
+    for k,v in dic.items():
+      col += '`' + k + '`,'
+      val += get_value_sql(v) + ','
+    col = col[:-1]
+    val = val[:-1]
+    return '(' + col + ') VALUES (' + val + ');'
+
 
 class dota2sql:
   def __init__(self,host='ali.banixc.com',user='dota',passwd='dotaer',db='dota',port=3306,charset='utf8'):
@@ -32,6 +59,7 @@ class dota2sql:
     except:
       traceback.print_exc()
 
+### 以下函数请勿调用
   def __query(self,sql):
     try:
       cur = self.conn.cursor()
@@ -52,24 +80,33 @@ class dota2sql:
     except:
       traceback.print_exc()
 
-  def insert_item(self,dic,table):
-    try:
-       sql = 'DELETE FROM ' + table
-       self.__exe(sql)
-       for value in dic[table]:
-        col = ''
-        val = ''
-        for k,v in value.items():
-          col += '`' + k + '`,'
-          val += '\"' + v + '\",' if isinstance(v,str) else str(v) + ','
-        col = col[:-1]
-        val = val[:-1]
-        sql = 'INSERT INTO `' + table + '` (' + col + ') VALUES (' + val + ');'
-        self.__exe(sql)
-    except:
-      traceback.print_exc()
-    print('update item success!')
+  # def insert_item(self,dic,table):
+  #   try:
+  #      sql = 'DELETE FROM ' + table
+  #      self.__exe(sql)
+  #      for value in dic[table]:
+  #       col = ''
+  #       val = ''
+  #       for k,v in value.items():
+  #         col += '`' + k + '`,'
+  #         val += '\"' + v + '\",' if isinstance(v,str) else str(v) + ','
+  #       col = col[:-1]
+  #       val = val[:-1]
+  #       sql = 'INSERT INTO `' + table + '` (' + col + ') VALUES (' + val + ');'
+  #       self.__exe(sql)
+  #   except:
+  #     traceback.print_exc()
+  #   print('update item success!')
 
+  def update_steam_msg(self,dic):
+    steamid=int(dic['steamid'])
+    sql = 'REPLACE INTO `steam` %s' % get_insert_sql(dic)
+    return self.__exe(sql)
+
+    # return self.__exe(sql)
+### 以上函数请勿调用
+
+### 以下函数可供View层调用
   def login(self,username,password):
     sql = 'select `uid`,`username`,`password` from `users` where `username` = "' + username + '";'
     data = self.__query(sql)
@@ -116,9 +153,40 @@ class dota2sql:
     sql = 'update `users` set `password` = "'+ md5((username + password + '+5').encode('utf-8')) +'" where email = "'+email+'";'
     self.__exe(sql)
 
+  def get_watch_list(self,uid):
+    sql = 'SELECT * FROM `watchs` WHERE `uid` = %d;' % uid;
+    return self.__query(sql)
 
+  def add_watch_list(self,uid,account_id):
+    sql = 'INSERT INTO `watchs` (`uid`,`game_id`) VALUES (%d,%d)' % (uid,account_id)
+    return self.__exe(sql)
+
+  def get_steam_msg(self,steamid):
+    fetch.Fetch(method='get_player_summaries',steamids=steamid).start()
+    sql = 'SELECT * FROM `steam` WHERE `steamid` = %s' % steamid;
+    data = self.__query(sql)
+    if len(data) > 0:
+      return data[0]
+    else:
+      return None
+
+  def set_steam_id(self,uid,steamid):
+    if self.get_steam_msg(steamid) is None:
+      return 0
+    else:
+      sql = 'UPDATE `users` SET `steamid` = %d WHERE `uid` = %d' % (steamid,uid) 
+      return self.__exe(sql)
+
+### 调试用
 if __name__ == '__main__':
   dsql = dota2sql()
-  result = dsql.get_heroes_abilities()
-  if len(result) > 0:
-    print(result)
+  # print(dsql.add_watch_list(uid = 20,game_id=100))
+  # print(dsql.get_watch_list(uid = 20))
+  # print(dsql.get_steam_msg(76561198121063498))
+  # if len(result) > 0
+
+  # print(get_insert_sql(dic))
+  # print(dsql.register('a','b','123'))
+  print(dsql.set_steam_id(31,76561198121063198))
+
+

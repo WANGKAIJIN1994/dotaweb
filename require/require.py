@@ -86,7 +86,7 @@ api.add_resource(GetLeagueListing, '/league/')
 api.add_resource(GetLiveLeagueGames, '/live/')
 api.add_resource(GetMatch, '/match/<string:match_id>/')
 api.add_resource(GetMatchHistory, '/history/<string:account_id>/')
-api.add_resource(GetPlayerSummaries, '/player/<string:steamids>/')
+api.add_resource(GetPlayerSummaries, '/player/<int:steamids>/')
 api.add_resource(GetTeamInfo, '/team/<string:start_at_team_id>/','/team/<string:start_at_team_id>/requested/<string:teams_requested>/')
 
 
