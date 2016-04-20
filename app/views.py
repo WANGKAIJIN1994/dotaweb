@@ -1,5 +1,6 @@
 from flask import render_template,  redirect, session, url_for, request,flash
-from app import app, dota
+from app import app
+import dota
 import smtplib, base64  
 from email.mime.text import MIMEText  
 
