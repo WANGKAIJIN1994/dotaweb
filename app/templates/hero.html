@@ -7,9 +7,21 @@
 		<div class="panel panel-default col-sm-8"  style = "background-color:#111111;color:white">
 		   <table class="table">
   			  
-		      <th>ID</th><th>Name </th><th>Picture</th>
+		      <th>Picture</th><th>Name </th><th>Abilities</th>
 		      {% for hero in heroes %}
-		      <tr><td>{{ hero[0] }}</td><td>{{ hero[2] }}</td><td><img src="{{ hero[3] }}"/></td></tr>
+		      <tr>
+		      	<td><img  width="70" height="50" src="{{ hero[4] }}"/></td>
+		      	<td>{{hero[2]}}</td>
+		      	<td>
+		      		{% for ability in abilities %}
+		      		{% if ability[2] in hero %}
+		      	
+		      		<img width="50" height="50" src="http://cdn.dota2.com.cn/apps/dota2/images/abilities/{{ability[1]}}_lg.png" data-toggle="tooltip" data-placement="top" title="{{ability[1]}}"/>
+		     
+		      		{% endif %}
+		      		{% endfor %}
+		      	</td>
+		      </tr>
 		      {% endfor %}
 
 		   </table>
@@ -40,5 +52,8 @@
 		</div>
 		<!-- right over -->
 	</div>
+	<script>
+   $(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
    <!-- footer -->
 {% endblock %}
