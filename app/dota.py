@@ -91,6 +91,10 @@ class dota2sql:
     sql = 'SELECT * FROM `heroes`;'
     return self.__query(sql)
 
+  def get_heroes_abilities(self):
+    sql = 'SELECT * FROM `heroes_abilities`;'
+    return self.__query(sql)
+
   def get_items(self):
     sql = 'SELECT * FROM `items`;'
     return self.__query(sql)
@@ -105,6 +109,6 @@ class dota2sql:
 
 if __name__ == '__main__':
   dsql = dota2sql()
-  result = dsql.get_heroes()
+  result = dsql.get_heroes_abilities()
   if len(result) > 0:
     print(result)
