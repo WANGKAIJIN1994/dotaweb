@@ -15,8 +15,32 @@
 
 		<!-- right -->
 		<div class="list-group col-sm-3 pull-right" style = "margin:0 auto;text-align:center;">
-			
+			{% if steam_msg %}
 			<div class="list-group-item active" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         <span class="glyphicon glyphicon-user"></span>User Information
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+				<img src="{{steam_msg[8]}}" class="img-circle" />
+			</div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         SteamID:{{steam_msg[0]}}
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		      <a href="{{steam_msg[5]}}">steamcommunity</a>
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         Last Logoff:{{steam_msg[4]}}
+		      </h4>
+		   </div>
+		   {% else %}
+		   <div class="list-group-item active" style = "background-color:#111111;color:white">
 		      <h4 class="list-group-item-heading">
 		         <span class="glyphicon glyphicon-user"></span>User Information
 		      </h4>
@@ -24,16 +48,7 @@
 		   <div class="list-group-item" style = "background-color:#111111;color:white">
 				<img src="{{ url_for('static',filename='images/user.png') }}" class="img-circle" />
 			</div>
-		   <div class="list-group-item" style = "background-color:#111111;color:white">
-		      <h4 class="list-group-item-heading">
-		         first information
-		      </h4>
-		   </div>
-		   <div class="list-group-item" style = "background-color:#111111;color:white">
-		      <h4 class="list-group-item-heading">
-		         second information
-		      </h4>
-		   </div>
+		   {% endif %}
 		</div>
 		<!-- right over -->
 	</div>

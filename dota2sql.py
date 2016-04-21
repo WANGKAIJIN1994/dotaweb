@@ -72,6 +72,7 @@ class Dota2SQL:
       cur.execute(sql)
       data = cur.fetchall()
       cur.close()
+      # print(data)
       return data         #返回结果集
     except:
       traceback.print_exc()
@@ -138,6 +139,10 @@ class Dota2SQL:
         return 'EMAIL_EXIST'
     return 'NOTHING_EXIST'
 
+  def get_user(self,username):
+    sql = 'select * FROM `users` WHERE `username` = "' + username + '" ;'
+    return self.__query(sql)
+
   def changepwd(self,email,password):
     sql = 'select `uid`,`username`,`password` from `users` where `email` = "' + email + '";'
     data = self.__query(sql)
@@ -157,29 +162,37 @@ class Dota2SQL:
     sql = 'SELECT * FROM `items`;'
     return self.__query(sql)
 
+  def get_steamid_user(self,username):
+    sql = 'select steamid FROM `users` WHERE `username` = "' + username + '" ;'
+    data = self.__query(sql)
+    if len(data) > 0:
+      return data[0][0]
+    else:
+      return None
+
   def get_watch_list(self,uid):
     sql = 'SELECT * FROM `watchs` WHERE `uid` = %d;' % uid;
     return self.__query(sql)
 
   def add_watch_list(self,uid,account_id):
-    sql = 'INSERT INTO `watchs` (`uid`,`game_id`) VALUES (%d,%d)' % (uid,account_id)
+    sql = 'INSERT INTO `watchs` (`uid`,`account_id`) VALUES (%d,%d)' % (uid,account_id)
     return self.__exe(sql)
 
   def get_steam_msg(self,steamid):
-    fetch.Fetch(method='get_player_summaries',steamids=steamid).start()
+    Fetch(method='get_player_summaries',steamids=steamid).start()
     sql = 'SELECT * FROM `steam` WHERE `steamid` = %s' % steamid;
+    print(sql)
     data = self.__query(sql)
+    # print(data)
     if len(data) > 0:
       return data[0]
     else:
       return None
 
   def set_steam_id(self,uid,steamid):
-    if self.get_steam_msg(steamid) is None:
-      return 0
-    else:
-      sql = 'UPDATE `users` SET `steamid` = %d WHERE `uid` = %d' % (steamid,uid) 
-      return self.__exe(sql)
+    self.get_steam_msg(steamid)
+    sql = 'UPDATE `users` SET `steamid` = %d WHERE `uid` = %d' % (steamid,uid) 
+    return self.__exe(sql)
 
   def set_account_id(self,uid,account_id):
       sql = 'UPDATE `users` SET `account_id` = %d WHERE `uid` = %d' % (account_id,uid) 
@@ -224,7 +237,11 @@ def test():
 
 def test2():
     dsql = Dota2SQL()
-    print(dsql.set_account_id(31,1232131123))
+    # print(dsql.set_account_id(31,1232131123))
+    # print(
+    dsql.get_steam_msg(76561198299172651)
+      # )
+
    
 if __name__ == '__main__':  
     # test()

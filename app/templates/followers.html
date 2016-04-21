@@ -1,0 +1,39 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+   <div class="container" >
+   		 <br>
+         <br>
+         <br>
+         <br>
+    	<!-- left -->
+    	<div class="col-lg-8 col-md-offset-2">
+          <form name="form_login" action="" method="post">
+            <div class="input-group">
+           
+               <input type="text" name="accountid" class="form-control">
+               <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit">
+                     Add!
+                  </button>
+               </span>
+            
+            </div><!-- /input-group -->
+          </form>
+         </div>
+         <br>
+         <br>
+         <br>
+         <br>
+		<div class="panel panel-default col-sm-6 col-md-offset-3"  style = "background-color:#111111;color:white">
+		   <table class="table">
+		      <th>Followers</th>
+          {% for follower in followers %}
+		      <tr><td>{{follower[0]}}</td></tr>
+          {% endfor %}
+		   </table>
+		</div>
+		<!-- left over -->
+	</div>
+  {% endblock %}

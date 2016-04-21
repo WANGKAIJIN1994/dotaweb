@@ -8,10 +8,19 @@ from email.mime.text import MIMEText
 @app.route("/")
 @app.route("/index")
 def index():
+    dotauser = Dota2SQL()
+    steam_msg = None
     if session.get('user') is  None:
        return redirect('/login')
+    else:
+        steamid = dotauser.get_steamid_user(session.get('user'))
+        if steamid is None:
+            pass
+        else:
+            steam_msg = dotauser.get_steam_msg(steamid)
     return render_template("index.html",
         title = 'Home',
+        steam_msg =steam_msg,
         user = session['user'])
 
 
@@ -149,9 +158,16 @@ def hero():
     dotauser = Dota2SQL()
     heroes = dotauser.get_heroes();
     abilities = dotauser.get_heroes_abilities();
+    steam_msg = None
+    steamid = dotauser.get_steamid_user(session.get('user'))
+    if steamid is None:
+        pass
+    else:
+        steam_msg = dotauser.get_steam_msg(steamid)
     return render_template('hero.html',
         title = 'Heroes',
         heroes = heroes,
+        steam_msg =steam_msg,
         abilities = abilities,
         user = session['user'])
 #goods
@@ -159,11 +175,55 @@ def hero():
 def goods():
     dotauser = Dota2SQL()
     items = dotauser.get_items();
+    steamid = dotauser.get_steamid_user(session.get('user'))
+    steam_msg = None
+    steamid = dotauser.get_steamid_user(session.get('user'))
+    if steamid is None:
+        pass
+    else:
+        steam_msg = dotauser.get_steam_msg(steamid)
     return render_template('goods.html',
         title = 'Goods',
+        steam_msg =steam_msg,
         items = items,
         user = session['user'])
 
+#setting
+@app.route("/setting", methods = ['GET', 'POST'])
+def setting():
+    dotauser = Dota2SQL()
+    steamid = dotauser.get_steamid_user(session.get('user'))
+    steam_msg = None
+    if steamid is None:
+        pass
+    else:
+        steam_msg = dotauser.get_steam_msg(steamid)
+    user = dotauser.get_user(session['user'])
+    if request.method == 'POST':
+        steamid = request.form["steamid"] 
+        accountid = request.form["accountid"] 
+        dotauser.set_steam_id(user[0][0],int(steamid))
+        dotauser.set_account_id(user[0][0],int(accountid))
+    return render_template('setting.html',
+        steam_msg =steam_msg,
+        user = session['user'],
+        title = 'Setting')
+
+
+#followers
+@app.route("/followers", methods = ['GET', 'POST'])
+def followers():
+    dotauser = Dota2SQL()
+    user = dotauser.get_user(session['user'])
+    followers = dotauser.get_watch_list(user[0][0])
+    if request.method == 'POST':
+        accountid = request.form["accountid"] 
+        print(user[0][0])
+        dotauser.add_watch_list(user[0][0],int(accountid))
+    return render_template('followers.html',
+        user = session['user'],
+        followers = followers,
+        title = 'Followers')
 
 
 #加密算法
