@@ -6,6 +6,7 @@ import dota2api
 import time
 import queue
 import threading
+import json
 
 D2_API_KEY = '0EB71FBD16527AF680B88D79067AF1B6'
 
@@ -150,15 +151,24 @@ class Dota2SQL:
                     fetch = Dota2SQL.fetch_list.get()
                     thread = threading.Thread(target=fetch_all, args=(fetch,))
                     # fetch_all(fetch)
-                    print(fetch)
+                    print(fetch, ' 还有%s个' % Dota2SQL.fetch_list.qsize())
                     thread.start()
 
         threading.Thread(target=loop).start()
 
+    # 清空爬取的所有数据
     @staticmethod
-    def __query(sql):
+    def clear():
+        return Dota2SQL.__exe(
+            'TRUNCATE `match`;TRUNCATE `players`;TRUNCATE `ability_upgrades`;TRUNCATE `additional_units`;TRUNCATE `account`;TRUNCATE `fail`;')
+
+    @staticmethod
+    def __query(sql, isdic=False):
         try:
-            cur = Dota2SQL.conn.cursor()
+            if not isdic:
+                cur = Dota2SQL.conn.cursor()
+            else:
+                cur = Dota2SQL.conn.cursor(pymysql.cursors.DictCursor)
             cur.execute(sql)
             data = cur.fetchall()
             cur.close()
@@ -198,7 +208,8 @@ class Dota2SQL:
                 palyer['match_id'] = match_id
                 no_key_set = (
                     'leaver_status_description', 'hero_name', 'ability_upgrades', 'item_0_name', 'item_1_name',
-                    'item_2_name', 'item_3_name', 'item_4_name', 'item_5_name', 'additional_units')
+                    'item_2_name', 'item_3_name', 'item_4_name', 'item_5_name', 'additional_units',
+                    'leaver_status_name')
                 sql += 'INSERT INTO `players` %s' % get_insert_sql(palyer, no_key_set)
                 # Dota2SQL.__exe(sql)
 
@@ -346,103 +357,105 @@ class Dota2SQL:
     #     if len(data['players']) > 0:
     #         self.dsql.update_steam_msg(data['players'][0])
 
+    # 用于更新用户历史记录
     @staticmethod
     def update_match_history(**kwargs):
         kwargs['fail'] = 0
         kwargs['fetch_type'] = 'history'
         Dota2SQL.fetch_list.put(kwargs)
 
+    # 用于更新比赛记录
     @staticmethod
     def update_match_details(**kwargs):
         kwargs['fail'] = 0
         kwargs['fetch_type'] = 'match'
         Dota2SQL.fetch_list.put(kwargs)
 
+    # 用于获取队列中的剩余元素
     @staticmethod
     def get_queue_size():
         return Dota2SQL.fetch_list.qsize()
 
+    # 用于获取比赛详情 从数据库中 若没有则返回无
     @staticmethod
     def get_match_details(match_id):
-        sql = 'SELECT * FROM `match` WHERE `match_id` = %s LIMIT 1;' % match_id
-        data = Dota2SQL.__query(sql)
+        sql = 'SELECT * FROM `match_replace` WHERE `match_id` = %s LIMIT 1;' % match_id
+        data = Dota2SQL.__query(sql, True)
+        if len(data) < 1:
+            Dota2SQL.update_match_details(match_id=match_id)
+            return None
+
+        match = data[0]
+        sql = 'SELECT * FROM `players_replace` WHERE `match_id` = %s;' % match_id
+        players = Dota2SQL.__query(sql, True)
+        if len(players) < 1:
+            return None
+
+        ability_upgrades = dict()
+        additional_units = dict()
+
+        # 这个是最近的比赛才会返回的加点数据 以前的没有
+        sql = 'SELECT `player_slot`,`level`,`ability`,`time`,`ability_name` FROM `ability_replace` WHERE `match_id` = %s;' % match_id
+        data = Dota2SQL.__query(sql, True)
         if len(data) > 0:
-            match = data[0]
-            sql = 'SELECT * FROM `players` WHERE `match_id` = %s LIMIT 1;' % match_id
-            data = Dota2SQL.__query(sql)
-            if len(data) > 0:
-                # dic = map(lambda data: data['player_slot'], data, data)
-                players = data
 
-                sql = 'SELECT `player_slot`,`level`,`ability`,`time` FROM `ability_upgrades` WHERE `match_id` = %s LIMIT 1;' % match_id
+            for ability_upgrade in data:
+                player_slot = ability_upgrade.pop('player_slot')
+                if ability_upgrades.get(player_slot) is None:
+                    ability_upgrades[player_slot] = list()
+                ability_upgrades[player_slot].append(ability_upgrade)
 
-                data = Dota2SQL.__query(sql)
-                if len(data) > 0:
-                    ability_upgrades = dict()
+        # 这个是德鲁伊特有的 暂时不用管
+        sql = 'SELECT `unitname`,`item_0`,`item_1`,`item_2`,`item_3`,`item_4`,`item_5`,`player_slot` FROM `additional_units` WHERE `match_id` = %s;' % match_id
+        data = Dota2SQL.__query(sql, True)
+        if len(data) > 0:
 
-                    for ability_upgrade in data:
-                        player_slot = ability_upgrade['player_slot']
-                        ability_upgrade['player_slot'] = None
-                        if ability_upgrades.get(player_slot) is None:
-                            ability_upgrades[player_slot] = list()
-                        ability_upgrades[player_slot].append(ability_upgrade)
+            for additional_unit in data:
+                player_slot = additional_unit.pop('player_slot')
+                if additional_units.get(player_slot) is None:
+                    additional_units[player_slot] = list()
+                additional_units[player_slot].append(additional_unit)
 
-                sql = 'SELECT `unitname`,`item_0`,`item_1`,`item_2`,`item_3`,`item_4`,`item_5`,`player_slot` FROM `additional_units` WHERE `match_id` = %s LIMIT 1;' % match_id
-                data = Dota2SQL.__query(sql)
-                if len(data) > 0:
-                    additional_units = dict()
+        for player in players:
+            if ability_upgrades.get(player['player_slot']) is not None:
+                player['ability_upgrades'] = ability_upgrades[player['player_slot']]
+            if additional_units.get(player['player_slot']) is not None:
+                player['additional_unit'] = additional_units[player['player_slot']]
 
-                    for additional_unit in data:
-                        player_slot = additional_unit['player_slot']
-                        additional_unit['player_slot'] = None
-                        if additional_unit.get(player_slot) is None:
-                            additional_unit[player_slot] = list()
-                            additional_unit[player_slot].append(additional_unit)
-            for player in players:
-                if ability_upgrades.get(player['player_slot']) is not None:
-                    player['ability_upgrades'] = ability_upgrades[player['player_slot']]
-                if additional_unit.get(player['player_slot']) is not None:
-                    player['additional_unit'] = additional_unit[player['player_slot']]
-            match['players'] = players
-            return match
-        return None
+        match['players'] = players
+        return match
 
-
+    # 用于获取某人的所有比赛 从数据库中 若没有则返回无 获取前要先爬 否则一定没有
     @staticmethod
     def get_match_history(account_id):
-        sql = ''
+        sql = 'SELECT * FROM `player_match` WHERE `account_id` = %s' % account_id
+        data = Dota2SQL.__query(sql, True)
+        return data if data is not None or len(data) > 0 else None
 
-def test():
-    # thread1 = Fetch('heroes',1)  
-    # thread2 = Fetch('items',1)  
-    # thread1.start()
-    # thread2.start()
-    # thread3 = Fetch('get_match_details','1000193456').start()
-    # thread4 = Fetch(method='get_player_summaries',steamids=76561198121063498).start()
-    # thread5 = Fetch('get_match_history',account_id=76482434).start()
-    pass
+
+# 很关键 用于启动监听线程
+Dota2SQL.fetch()
 
 
 def test2():
-    Dota2SQL.exe(
-        'TRUNCATE `match`;TRUNCATE `players`;TRUNCATE `ability_upgrades`;TRUNCATE `additional_units`;TRUNCATE `account`;TRUNCATE `fail`;')
-    Dota2SQL.fetch()
     # Dota2SQL.get_match_history(account_id=76482434)
     # Dota2SQL.get_match_details(match_id=2311948390)
     Dota2SQL.update_match_history(account_id=160797770)
     # print(dsql.set_account_id(31,1232131123))
-    # print(
     # dsql.get_steam_msg(76561198299172651)
-    # )
 
     print(Dota2SQL.get_queue_size())
-    # Dota2SQL.close()
 
 
 def test3():
-    print(Dota2SQL.get_match_details(match_id=1192257920))
+    # Dota2SQL.update_match_history(account_id=86861614)
+    # Dota2SQL.update_match_history(account_id=69010155)
+    # match = Dota2SQL.get_match_history(account_id=160797770)
+    # print(match[0])
+    match = Dota2SQL.get_match_details(match_id=2146760485)
+
+    print(json.dumps(match))
 
 
-if __name__ == '__main__':
-    test2()
-    pass
+if '__main__' == __name__:
+    test3()
