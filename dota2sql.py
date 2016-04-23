@@ -118,12 +118,13 @@ class Dota2SQL:
                             results_remaining = data['results_remaining']
                             templst = [match['match_id'] for match in data['matches']]
                             lst.extend(templst)
-                            fetch_object['start_at_match_id'] = min(templst)
+                            fetch_object['start_at_match_id'] = min(templst) - 1
                         else:
                             break
 
                     for match in lst:
-                        Dota2SQL.get_match_details(match_id=match)
+                        Dota2SQL.update_match_details(match_id=match)
+
                     if last_match_start_time > 0:
                         sql = 'REPLACE INTO `account` (`account_id`,`last_update`) VALUE (%s,%s);' % (
                             fetch_id, last_match_start_time)
@@ -139,10 +140,13 @@ class Dota2SQL:
                     Dota2SQL.fetch_list.put(fetch_object)
 
         def loop():
+
             while True:
                 time.sleep(0.1)
+                if threading.active_count() > 5:
+                    continue
                 while not Dota2SQL.fetch_list.empty():
-                    time.sleep(0.1)
+                    time.sleep(1)
                     fetch = Dota2SQL.fetch_list.get()
                     thread = threading.Thread(target=fetch_all, args=(fetch,))
                     # fetch_all(fetch)
@@ -166,6 +170,8 @@ class Dota2SQL:
     @staticmethod
     def __exe(sql):
         try:
+            # conn = pymysql.connect(Dota2SQL.host, Dota2SQL.user, Dota2SQL.passwd, Dota2SQL.db, Dota2SQL.port,
+            #                        Dota2SQL.charset)
             cur = Dota2SQL.conn.cursor()
             cul = cur.execute(sql)
             Dota2SQL.conn.commit()
@@ -212,7 +218,7 @@ class Dota2SQL:
                         additional_unit['match_id'] = match_id
                         additional_unit['player_slot'] = player_slot
                         # sql += 'INSERT INTO `additional_units` %s;' % get_insert_sql(additional_unit)
-                        sql += 'INSERT INTO `additional_units` %s;' % get_insert_sql(additional_unit)
+                        sql += 'INSERT INTO `additional_units` %s' % get_insert_sql(additional_unit)
 
                         # Dota2SQL.__exe(sql)
                         # print('INSERT INTO `additional_units` %s;' % get_insert_sql(additional_unit))
@@ -341,17 +347,70 @@ class Dota2SQL:
     #         self.dsql.update_steam_msg(data['players'][0])
 
     @staticmethod
-    def get_match_history(**kwargs):
+    def update_match_history(**kwargs):
         kwargs['fail'] = 0
         kwargs['fetch_type'] = 'history'
         Dota2SQL.fetch_list.put(kwargs)
 
     @staticmethod
-    def get_match_details(**kwargs):
+    def update_match_details(**kwargs):
         kwargs['fail'] = 0
         kwargs['fetch_type'] = 'match'
         Dota2SQL.fetch_list.put(kwargs)
 
+    @staticmethod
+    def get_queue_size():
+        return Dota2SQL.fetch_list.qsize()
+
+    @staticmethod
+    def get_match_details(match_id):
+        sql = 'SELECT * FROM `match` WHERE `match_id` = %s LIMIT 1;' % match_id
+        data = Dota2SQL.__query(sql)
+        if len(data) > 0:
+            match = data[0]
+            sql = 'SELECT * FROM `players` WHERE `match_id` = %s LIMIT 1;' % match_id
+            data = Dota2SQL.__query(sql)
+            if len(data) > 0:
+                # dic = map(lambda data: data['player_slot'], data, data)
+                players = data
+
+                sql = 'SELECT `player_slot`,`level`,`ability`,`time` FROM `ability_upgrades` WHERE `match_id` = %s LIMIT 1;' % match_id
+
+                data = Dota2SQL.__query(sql)
+                if len(data) > 0:
+                    ability_upgrades = dict()
+
+                    for ability_upgrade in data:
+                        player_slot = ability_upgrade['player_slot']
+                        ability_upgrade['player_slot'] = None
+                        if ability_upgrades.get(player_slot) is None:
+                            ability_upgrades[player_slot] = list()
+                        ability_upgrades[player_slot].append(ability_upgrade)
+
+                sql = 'SELECT `unitname`,`item_0`,`item_1`,`item_2`,`item_3`,`item_4`,`item_5`,`player_slot` FROM `additional_units` WHERE `match_id` = %s LIMIT 1;' % match_id
+                data = Dota2SQL.__query(sql)
+                if len(data) > 0:
+                    additional_units = dict()
+
+                    for additional_unit in data:
+                        player_slot = additional_unit['player_slot']
+                        additional_unit['player_slot'] = None
+                        if additional_unit.get(player_slot) is None:
+                            additional_unit[player_slot] = list()
+                            additional_unit[player_slot].append(additional_unit)
+            for player in players:
+                if ability_upgrades.get(player['player_slot']) is not None:
+                    player['ability_upgrades'] = ability_upgrades[player['player_slot']]
+                if additional_unit.get(player['player_slot']) is not None:
+                    player['additional_unit'] = additional_unit[player['player_slot']]
+            match['players'] = players
+            return match
+        return None
+
+
+    @staticmethod
+    def get_match_history(account_id):
+        sql = ''
 
 def test():
     # thread1 = Fetch('heroes',1)  
@@ -365,16 +424,23 @@ def test():
 
 
 def test2():
-    # Dota2SQL.exe(
-    #     'TRUNCATE `match`;TRUNCATE `players`;TRUNCATE `ability_upgrades`;TRUNCATE `additional_units`;TRUNCATE `account`;TRUNCATE `fail`;')
+    Dota2SQL.exe(
+        'TRUNCATE `match`;TRUNCATE `players`;TRUNCATE `ability_upgrades`;TRUNCATE `additional_units`;TRUNCATE `account`;TRUNCATE `fail`;')
     Dota2SQL.fetch()
     # Dota2SQL.get_match_history(account_id=76482434)
     # Dota2SQL.get_match_details(match_id=2311948390)
-    Dota2SQL.get_match_history(account_id=160797770)
+    Dota2SQL.update_match_history(account_id=160797770)
     # print(dsql.set_account_id(31,1232131123))
     # print(
     # dsql.get_steam_msg(76561198299172651)
     # )
+
+    print(Dota2SQL.get_queue_size())
+    # Dota2SQL.close()
+
+
+def test3():
+    print(Dota2SQL.get_match_details(match_id=1192257920))
 
 
 if __name__ == '__main__':
