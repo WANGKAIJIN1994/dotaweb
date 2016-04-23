@@ -7,5 +7,5 @@ dist
 build
 /venv/
 *.db
-
+/.idea/
 makesql/all.sql

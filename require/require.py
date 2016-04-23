@@ -48,18 +48,12 @@ class GetMatch(Resource):
 
 #比赛历史列表
 class GetMatchHistory(Resource): 
-    def get(self, account_id, **kwargs):
-        params = request.args
-        if 'account_id' not in kwargs:
-            kwargs['account_id'] = account_id
-        # kwargs['start_at_match_id'] = 1989691645
-        # kwargs['start_time'] = 1460456786
-        for key in params:
-            kwargs[key] = params[key]
-        print(kwargs)
-
-        hist  = dotaapi.get_match_history(kwargs)
-        return hist
+    def get(self, account_id, date_min = None):
+        params=dict()
+        params['account_id'] = account_id
+        if date_min is not None:
+            params['date_min'] = date_min
+        return dotaapi.get_match_history(**params)
 
 #get_match_history_by_seq_num
 
@@ -85,7 +79,7 @@ api.add_resource(GetHeroes, '/heroes/')
 api.add_resource(GetLeagueListing, '/league/')
 api.add_resource(GetLiveLeagueGames, '/live/')
 api.add_resource(GetMatch, '/match/<string:match_id>/')
-api.add_resource(GetMatchHistory, '/history/<string:account_id>/')
+api.add_resource(GetMatchHistory, '/history/<string:account_id>/','/history/<string:account_id>/<string:date_min>')
 api.add_resource(GetPlayerSummaries, '/player/<int:steamids>/')
 api.add_resource(GetTeamInfo, '/team/<string:start_at_team_id>/','/team/<string:start_at_team_id>/requested/<string:teams_requested>/')
 
