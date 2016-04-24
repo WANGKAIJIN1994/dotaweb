@@ -471,4 +471,4 @@ if '__main__' == __name__:
     #print(Dota2SQL.get_match_history(account_id=160797770))
     # print(Dota2SQL.api.get_player_summaries(steamids=76561198121063198))
     # print(Dota2SQL.get_steam_msg(76561198121063198)['players'])
-    print(Dota2SQL.api.get_player_summaries(steamids=76561198121063198))
+    print(json.dumps(Dota2SQL.get_match_details(1367828649)))

@@ -1,0 +1,408 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+   <div class="container" >
+    	<!-- left -->
+         <div class="pull-left" style="width:150px;background-color:#212121;">
+         </div>   
+         <br>
+         <br>  
+		<div class="panel panel-default col-sm-7 col-md-offset-3" 
+         style = "background-color:#212121;color:white">
+		   <table class="table">
+            <th>
+              <font color="white">Match_ID</font>
+            </th>
+            <th>
+              <s1>Start_Time</s1>
+            </th>
+            <th>
+              <s1>Spend_time</s1>
+            </th>
+            <th>
+              <s1>Area</s1>
+            </th>
+            <th>
+              <s1>First_blood</s1>
+            </th>
+            <th>
+              <s1>Skill</s1>
+            </th>
+            <th>
+              <s1>Game_mode</s1>
+            </th>
+		      <tr>
+            <td>
+              {{ match_detail['match_id'] }}
+            </td>
+            <td>
+              {{ match_detail['start_time'] }}
+            </td>
+            <td>
+               {{ match_detail['duration'] }}
+            </td>
+            <td>
+              {{ match_detail['regions_name'] }}
+            </td>
+            <td>
+               {{ match_detail['first_blood_time'] }}
+            </td>
+            <td>
+              skill
+            </td>
+            <td>
+              {{ match_detail['game_mode'] }}
+            </td>
+          </tr>
+		   </table>
+		</div>
+<!--天辉-->
+
+         <br>
+         <br>
+         <br>
+         <br>
+         <br>
+         <div class="pull-left" style="width:150px;background-color:#212121;">
+         <font color="#458B00" >RADIANT 
+         {% if match_detail['radiant_score']  ==  1 %}
+         / VECTORY
+         {% endif %}</font>
+         </div>   
+         <br>
+
+         <br> 
+  
+    <div class="panel panel-default col-sm-12 col-md-offset-1.5" 
+         style = "background-color:#212121;color:white">
+       <table class="table">
+       <tr>
+            <th>
+              <font color="">Player</font>
+            </th>
+            <th>
+              <s1>Hero</s1>
+            </th>
+            <th>
+            <font color="ff8000">KDA</font>
+            </th>
+            <th>
+              <s1>Kills</s1>
+            </th>
+            <th>
+              <s1>Assists</s1>
+            </th>
+            <th>
+              <font color="red">Deaths</font>
+            </th>
+            <th>
+              <s1>Last_hit/Deny</s1>
+            </th>
+            <th>
+              <s1>Experience/min</s1>
+            </th>
+            <th>
+              <s1>Money/min</s1>
+            </th>
+            <th>
+              <s1>Building_damage</s1>
+            </th>
+            <th>
+              <s1>Hero_Damage</s1>
+            </th>
+            <th>
+              Goods
+            </th>
+      </tr>
+      {% for player in match_detail['players'] %} 
+        {% if player['player_slot'] < 128 %}
+          <tr>
+            <td>
+              <font color="#458B00">player</font>
+            </td>
+            <td>
+              <img width="70" height="60" src="{{  player['heroes_url_large_portrait']  }}"/>
+            </td>
+            <td>
+              <font color="ff8000">c</font>
+            </td>
+            <td>
+              {{player['kills']}}
+            </td>
+            <td>
+              {{player['assists']}}
+            </td>
+            <td>
+              {{player['deaths']}}
+            </td>
+            <td>
+              {{player['last_hits']}}/{{player['denies']}}
+            </td>
+            <td>
+              {{player['xp_per_min']}}
+            </td>
+            <td>
+              {{  player['gold_per_min']  }}
+            </td>
+            <td>
+              {{  player['tower_damage']  }}
+            </td>
+            <td>
+               {{  player['hero_damage']  }}
+            </td>
+            <td>
+            {% if  player['item_0_url'] %}
+             <img width="30" height="30" src=" {{  player['item_0_url']  }}"/>
+           
+            {% endif %}
+            {% if  player['item_1_url'] %}
+             <img width="30" height="30" src=" {{  player['item_1_url']  }}"/>
+            
+            {% endif %}
+            {% if  player['item_2_url'] %}
+             <img width="30" height="30" src=" {{  player['item_2_url']  }}"/>
+            
+            {% endif %}
+            {% if  player['item_3_url'] %}
+             <img width="30" height="30" src=" {{  player['item_3_url']  }}"/>
+            
+            {% endif %}
+             {% if  player['item_4_url']%}
+             <img width="30" height="30" src=" {{  player['item_4_url']  }}"/>
+            {% endif %}
+            {% if  player['item_5_url']%}
+             <img width="30" height="30" src=" {{ player['item_5_url']  }}"/>
+            {% endif %}
+            </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+       </table>
+   </div>
+
+
+<!--夜魇dire-->
+
+
+         <br>
+         <br>
+         <br>
+         <br>
+         <br>
+         <div class="pull-left" style="width:150px;background-color:#212121;">
+         <font color="#458B00" >DIRE
+         {% if match_detail['radiant_score']  ==  0 %}
+         / VECTORY
+         {% endif %} </font>
+         </div>   
+         <br>
+
+         <br> 
+  
+<div class="panel panel-default col-sm-12 col-md-offset-1.5" 
+      style = "background-color:#212121;color:white">
+       <table class="table">
+       <tr>
+            <th>
+              <font color="">Player</font>
+            </th>
+            <th>
+              <s1>Hero</s1>
+            </th>
+            <th>
+            <font color="ff8000">KDA</font>
+            </th>
+            <th>
+              <s1>Kills</s1>
+            </th>
+            <th>
+              <s1>Assists</s1>
+            </th>
+            <th>
+              <font color="red">Deaths</font>
+            </th>
+            <th>
+              <s1>Last_hit/Deny</s1>
+            </th>
+            <th>
+              <s1>Experience/min</s1>
+            </th>
+            <th>
+              <s1>Money/min</s1>
+            </th>
+            <th>
+              <s1>Building_damage</s1>
+            </th>
+            <th>
+              <s1>Hero_Damage</s1>
+            </th>
+            <th>
+              Goods
+            </th>
+      </tr>
+      {% for player in match_detail['players'] %} 
+        {% if player['player_slot'] >= 128 %}
+          <tr>
+            <td>
+              <font color="#458B00">player</font>
+            </td>
+            <td>
+              <img width="70" height="60" src="{{  player['heroes_url_large_portrait']  }}"/>
+            </td>
+            <td>
+              <font color="ff8000">c</font>
+            </td>
+            <td>
+              {{player['kills']}}
+            </td>
+            <td>
+              {{player['assists']}}
+            </td>
+            <td>
+              {{player['deaths']}}
+            </td>
+            <td>
+              {{player['last_hits']}}/{{player['denies']}}
+            </td>
+            <td>
+              {{player['xp_per_min']}}
+            </td>
+            <td>
+              {{  player['gold_per_min']  }}
+            </td>
+            <td>
+              {{  player['tower_damage']  }}
+            </td>
+            <td>
+               {{  player['hero_damage']  }}
+            </td>
+            <td>
+            {% if  player['item_0_url'] %}
+             <img width="30" height="30" src=" {{  player['item_0_url']  }}"/>
+           
+            {% endif %}
+            {% if  player['item_1_url'] %}
+             <img width="30" height="30" src=" {{  player['item_1_url']  }}"/>
+            
+            {% endif %}
+            {% if  player['item_2_url'] %}
+             <img width="30" height="30" src=" {{  player['item_2_url']  }}"/>
+            
+            {% endif %}
+            {% if  player['item_3_url'] %}
+             <img width="30" height="30" src=" {{  player['item_3_url']  }}"/>
+            
+            {% endif %}
+             {% if  player['item_4_url']%}
+             <img width="30" height="30" src=" {{  player['item_4_url']  }}"/>
+            {% endif %}
+            {% if  player['item_5_url']%}
+             <img width="30" height="30" src=" {{ player['item_5_url']  }}"/>
+            {% endif %}
+            </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+       </table>
+</div>
+
+
+
+
+ <br>
+         <br>
+         <br>
+         <br>
+         <br>
+         <div class="pull-left" style="width:150px;background-color:#212121;">
+         <font color="#458B00">Skills to add(DIRE) </font>
+         </div>   
+         <br>
+
+         <br> 
+  
+<div class="panel panel-default col-sm-12 col-md-offset-1.5" 
+      style = "background-color:#212121;color:white">
+       <table class="table">
+          <tr>
+            <td>
+              HERO
+            </td>
+            <td>
+              grand_1
+            </td>
+            <td>
+              grand_2
+            </td>
+            <td>
+              grand_3
+            </td>
+            <td>
+              grand_4
+            </td>
+            <td>
+              grand_5
+            </td>
+            <td>
+              grand_6
+            </td>
+            <td>
+              h
+            </td>
+            <td>
+              i
+            </td>
+            <td>
+              j
+            </td>
+            <td>
+              k
+            </td>
+            <td>
+            g
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <font color="#458B00">a</font>
+            </td>
+            <td>
+              b
+            </td>
+            <td>
+              <font color="ff8000">c</font>
+            </td>
+            <td>
+              d
+            </td>
+            <td>
+              e
+            </td>
+            <td>
+              f
+            </td>
+            <td>
+              g
+            </td>
+            <td>
+              h
+            </td>
+            <td>
+              i
+            </td>
+            <td>
+              j
+            </td>
+            <td>
+              k
+            </td>
+            <td>
+            g
+            </td>
+          </tr>
+       </table>
+       <br>
+
+</div>
+{% endblock %}

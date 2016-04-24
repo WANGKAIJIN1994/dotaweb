@@ -5,11 +5,23 @@
 	<div class="container" >
     	<!-- left -->
 		<div class="panel panel-default col-sm-8"  style = "background-color:#111111;color:white">
+		{% if steam_msg %}
 		   <table class="table">
-		      <th>hero</th><th>shenglv </th><th>shiyongcishu</th>
-		      <tr><td>heroA</td><td>200</td><td>200</td></tr>
-		      <tr><td>heroB</td><td>400</td><td>200</td></tr>
+		      <th>Hero</th><th>Kill</th><th>Assists</th> <th>Deaths</th> <th>Gold</th> <th>Hero_Damage</th> 
+		      {% for match in match_history %}
+		      <tr>
+		      	<td><a href="/match_detail?match_id={{match['match_id'] }}">
+		      	<img width="70" height="50" src="{{ 								match['heroes_url_ful_large_protrait'] }}"/></a>
+		      	</td>
+			    <td>{{ match['kills'] }}</td>
+			    <td>{{ match['assists'] }}</td>
+			    <td>{{ match['deaths'] }}</td>
+			    <td>{{ match['gold'] }}</td>
+			    <td>{{ match['hero_damage'] }}</td>
+		      </tr>
+		      {% endfor %}	     
 		   </table>
+		 {% endif %}
 		</div>
 		<!-- left over -->
 

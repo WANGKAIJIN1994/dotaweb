@@ -19,9 +19,9 @@ def index():
             pass
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
-        # if accountid is None:
-        #     pass
-        # else:
+        if accountid is None:
+            pass
+        else:
             match_history = Dota2SQL().get_match_history(accountid)
             #print(match_history)
     return render_template("index.html",
@@ -181,6 +181,7 @@ def goods():
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     steam_msg = None
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
+    accountid = Dota2SQL().get_accountid_user(session.get('user'))
     if steamid is None:
         pass
     else:
@@ -224,10 +225,22 @@ def followers():
         accountid = request.form["accountid"] 
         print(user[0][0])
         Dota2SQL().add_watch_list(user[0][0],int(accountid))
+        return redirect('/followers')
     return render_template('followers.html',
         user = session['user'],
         followers = followers,
         title = 'Followers')
+
+
+#match_detail
+@app.route("/match_detail")
+def match_detail():
+    match_id = request.args.get('match_id','')
+    match_detail = Dota2SQL().get_match_details(match_id)
+    return render_template('match_detail.html',
+        user = session['user'],
+        match_detail = match_detail,
+        title = 'Match_Detail')
 
 
 #加密算法

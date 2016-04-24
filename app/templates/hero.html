@@ -13,7 +13,8 @@
 		      	<td><img  width="70" height="50" src="{{ hero[4] }}"/></td>
 		      	<td>{{hero[2]}}</td>
 		      	<td>
-		      		{% if ability %}
+		      		
+
 		      		{% for ability in abilities %}
 		      		{% if ability[2] in hero %}
 		      	
@@ -21,7 +22,7 @@
 		     
 		      		{% endif %}
 		      		{% endfor %}
-		      		{% endif %}
+		  
 		      	</td>
 		      </tr>
 		      {% endfor %}
