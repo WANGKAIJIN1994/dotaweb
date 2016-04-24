@@ -346,7 +346,7 @@ class Dota2SQL:
     @staticmethod
     def set_steam_id(uid, steam_id):
         data = Dota2SQL.get_steam_msg(steam_id)
-        if data is not None:
+        if len(Dota2SQL.get_steam_msg(steam_id)['players']) > 0:
             sql = 'UPDATE `users` SET `steamid` = %d WHERE `uid` = %d' % (steam_id, uid)
             return Dota2SQL.__exe(sql)
         else:
@@ -471,4 +471,5 @@ if '__main__' == __name__:
     #print(Dota2SQL.get_match_history(account_id=160797770))
     # print(Dota2SQL.api.get_player_summaries(steamids=76561198121063198))
     # print(Dota2SQL.get_steam_msg(76561198121063198)['players'])
-    print(json.dumps(Dota2SQL.get_match_details(1367828649)))
+    # print(json.dumps(Dota2SQL.get_match_details(1367828649)))
+   print(len(Dota2SQL.get_steam_msg(88)['players']))

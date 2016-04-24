@@ -206,12 +206,18 @@ def setting():
     if request.method == 'POST':
         steamid = request.form["steamid"] 
         accountid = request.form["accountid"] 
-        print(user[0][0])
-        print(int(steamid))
-        Dota2SQL().set_steam_id(user[0][0],int(steamid))
+        print(Dota2SQL().set_steam_id(user[0][0],int(steamid)))
+        if(Dota2SQL().set_steam_id(user[0][0],int(steamid)) == -1):
+            return  redirect('/illegal')
+        else:
+            if  Dota2SQL().get_match_history(accountid) is None:
+                return  redirect('/illegal')
+            else:
+                Dota2SQL().set_account_id(user[0][0],int(accountid))
+                return  redirect('/index')
         Dota2SQL().set_account_id(user[0][0],int(accountid))
     return render_template('setting.html',
-        steam_msg =steam_msg,
+        steam_msg = steam_msg['players'][0],
         user = session['user'],
         title = 'Setting')
 
@@ -223,8 +229,10 @@ def followers():
     followers = Dota2SQL().get_watch_list(user[0][0])
     if request.method == 'POST':
         accountid = request.form["accountid"] 
-        print(user[0][0])
-        Dota2SQL().add_watch_list(user[0][0],int(accountid))
+        if  Dota2SQL().get_match_history(accountid) is None:
+                return  redirect('/follower_illegal')
+        else:
+            Dota2SQL().add_watch_list(user[0][0],int(accountid))
         return redirect('/followers')
     return render_template('followers.html',
         user = session['user'],
@@ -241,6 +249,45 @@ def match_detail():
         user = session['user'],
         match_detail = match_detail,
         title = 'Match_Detail')
+
+
+@app.route("/follower_match")
+def follower_match():
+    steam_msg = None
+    match_history = None
+    accountid = request.args.get('accountid','')
+    if session.get('user') is  None:
+       return redirect('/login')
+    else:
+        steamid = Dota2SQL().get_steamid_user(session.get('user'))
+        if steamid is None:
+            pass
+        else:
+            steam_msg = Dota2SQL().get_steam_msg(steamid)
+        if accountid is None:
+            pass
+        else:
+            match_history = Dota2SQL().get_match_history(accountid)
+            #print(match_history)
+    return render_template("follower_match.html",
+        title = 'Follower_Match',
+        steam_msg = steam_msg['players'][0],
+        accountid = accountid,
+        match_history = match_history,
+        user = session['user'])
+
+#setting illegal
+@app.route("/illegal")
+def illegal():
+    return render_template('illegal.html',
+        title = 'Illegal')
+
+
+#follower illegal
+@app.route("/follower_illegal")
+def followerIllegal():
+    return render_template('follower_illegal.html',
+        title = 'FollowerIllegal')
 
 
 #加密算法
