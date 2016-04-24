@@ -314,6 +314,15 @@ class Dota2SQL:
             return None
 
     @staticmethod
+    def get_accountid_user(username):
+        sql = 'select account_id FROM `users` WHERE `username` = "' + username + '" ;'
+        data = Dota2SQL.__query(sql)
+        if len(data) > 0:
+            return data[0][0]
+        else:
+            return None
+
+    @staticmethod
     def get_watch_list(uid):
         sql = 'SELECT * FROM `watchs` WHERE `uid` = %d;' % uid;
         return Dota2SQL.__query(sql)
@@ -327,16 +336,12 @@ class Dota2SQL:
     def get_steam_msg(steam_id):
         data = Dota2SQL.api.get_player_summaries(steamids=steam_id)
         # if len(data['players']) > 0:
-        #     self.dsql.update_steam_msg(data['players'][0])
+        #      self.dsql.update_steam_msg(data['players'][0])
         # Fetch(method='get_player_summaries', steamids=steamid).start()
         # sql = 'SELECT * FROM `steam` WHERE `steamid` = %s' % steamid;
         # print(sql)
         # data = self.__query(sql)
-        # print(data)
-        if len(data) > 0:
-            return data[0]
-        else:
-            return None
+        return data
 
     @staticmethod
     def set_steam_id(uid, steam_id):
@@ -430,7 +435,7 @@ class Dota2SQL:
     def get_match_history(account_id):
         sql = 'SELECT * FROM `player_match` WHERE `account_id` = %s' % account_id
         data = Dota2SQL.__query(sql, True)
-        return data if data is not None or len(data) > 0 else None
+        return data if data is not None and len(data) > 0 else None
 
 
 # 很关键 用于启动监听线程
@@ -438,7 +443,7 @@ Dota2SQL.fetch()
 
 
 def test2():
-    # Dota2SQL.get_match_history(account_id=76482434)
+    #Dota2SQL.get_match_history(account_id=76482434)
     # Dota2SQL.get_match_details(match_id=2311948390)
     Dota2SQL.update_match_history(account_id=160797770)
     # print(dsql.set_account_id(31,1232131123))
@@ -456,6 +461,14 @@ def test3():
 
     print(json.dumps(match))
 
+def test4():
+    Dota2SQL.set_steam_id(39, 76561198121063198)
+    #Dota2SQL.set_account_id(39, 160797770)
+    #Dota2SQL.get_steam_msg(76561198121063198)
 
 if '__main__' == __name__:
-    test3()
+    # test4()
+    #print(Dota2SQL.get_match_history(account_id=160797770))
+    # print(Dota2SQL.api.get_player_summaries(steamids=76561198121063198))
+    # print(Dota2SQL.get_steam_msg(76561198121063198)['players'])
+    print(Dota2SQL.api.get_player_summaries(steamids=76561198121063198))

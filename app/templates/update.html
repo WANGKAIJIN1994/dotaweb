@@ -1,0 +1,23 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+<script> 
+	var t=10;//设定跳转的时间 
+	setInterval("refer()",1000); //启动1秒定时 
+	function refer(){ 
+	/*if(t==0){ 
+		location="http://www.baidu.com"; //#设定跳转的链接地址 
+		//break;
+		} */
+	document.getElementById('show').innerHTML=""+t+"秒后完成更新"; // 显示倒计时 
+	if(t==0){ 
+	} else{
+		t--; 
+	}
+	
+	} 
+</script> 
+{% block content %}
+   <div class="container" >
+      <div id="show"></div>
+	</div>
+  {% endblock %}

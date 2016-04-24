@@ -8,19 +8,27 @@ from email.mime.text import MIMEText
 @app.route("/")
 @app.route("/index")
 def index():
-    dotauser = Dota2SQL()
     steam_msg = None
+    match_history = None
     if session.get('user') is  None:
        return redirect('/login')
     else:
-        steamid = dotauser.get_steamid_user(session.get('user'))
+        steamid = Dota2SQL().get_steamid_user(session.get('user'))
+        accountid = Dota2SQL().get_accountid_user(session.get('user'))
         if steamid is None:
             pass
         else:
-            steam_msg = dotauser.get_steam_msg(steamid)
+            steam_msg = Dota2SQL().get_steam_msg(steamid)
+        # if accountid is None:
+        #     pass
+        # else:
+            match_history = Dota2SQL().get_match_history(accountid)
+            #print(match_history)
     return render_template("index.html",
         title = 'Home',
-        steam_msg =steam_msg,
+        steam_msg = steam_msg['players'][0],
+        accountid = accountid,
+        match_history = match_history,
         user = session['user'])
 
 
@@ -29,14 +37,13 @@ def index():
 #用户登录
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    dotauser = Dota2SQL()
     loginerror = ''
     if session.get('user') is not None:
        return redirect('/index')
     if request.method == 'POST':
         username = request.form["username"] 
         password = request.form["password"] 
-        user =  dotauser.login(username,password)
+        user =  Dota2SQL().login(username,password)
         if user == 'USER_NOT_FIND' or user == 'PASSWORD_ERROR':
             #loginerror = 'user not find or password error';
             flash('user not find or password error')
@@ -50,14 +57,13 @@ def login():
 #用户注册
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
-    dotauser = Dota2SQL()
     go = 1
     registererror=''
     if request.method == 'POST':
         username = request.form["username"] 
         password = request.form["password"] 
         email = request.form["email"] 
-        backdata = dotauser.judgeUser(username,email)
+        backdata = Dota2SQL().judge_user(username,email)
         if  backdata == 'EMAIL_EXIST':
             go = 0
             flash('This email has been registered')
@@ -84,22 +90,20 @@ def logout():
 #注册激活的函数
 @app.route("/commitRegister")
 def commitRegister():
-    dotauser = Dota2SQL()
     username = request.args.get('name','')
     password = request.args.get('password','')
     email = request.args.get('email','')
-    dotauser.register(jiemi(username),jiemi(password),jiemi(email))
+    Dota2SQL().register(jiemi(username),jiemi(password),jiemi(email))
     return redirect('/login')
 
 #更改密码
 @app.route("/pwdChange", methods = ['GET', 'POST'])
 def pwdChange():
-    dotauser = Dota2SQL()
     if request.method == 'POST':
         password = request.form["password"] 
         email = request.form["email"] 
         username = '*'
-        backdata = dotauser.judgeUser(username,email)
+        backdata = Dota2SQL().judge_user(username,email)
         if backdata == 'NOTHING_EXIST':
             flash('This email do not exist')
         else:
@@ -126,8 +130,7 @@ def pwdChange():
 def pwdChangeEmail():
     password = request.args.get('password','')
     email = request.args.get('email','')
-    dotauser = Dota2SQL()
-    dotauser.changepwd(jiemi(email),jiemi(password))
+    Dota2SQL().changepwd(jiemi(email),jiemi(password))
     return redirect('/login')
 
 
@@ -155,55 +158,57 @@ def sendEmail(username, password, email) :
 #hero
 @app.route("/heroes", methods = ['GET', 'POST'])
 def hero():
-    dotauser = Dota2SQL()
-    heroes = dotauser.get_heroes();
-    abilities = dotauser.get_heroes_abilities();
+    heroes = Dota2SQL().get_heroes();
+    abilities = Dota2SQL().get_heroes_abilities();
     steam_msg = None
-    steamid = dotauser.get_steamid_user(session.get('user'))
+    steamid = Dota2SQL().get_steamid_user(session.get('user'))
+    accountid = Dota2SQL().get_accountid_user(session.get('user'))
     if steamid is None:
         pass
     else:
-        steam_msg = dotauser.get_steam_msg(steamid)
+        steam_msg = Dota2SQL().get_steam_msg(steamid)
     return render_template('hero.html',
         title = 'Heroes',
         heroes = heroes,
-        steam_msg =steam_msg,
+        steam_msg = steam_msg['players'][0],
+        accountid = accountid,
         abilities = abilities,
         user = session['user'])
 #goods
 @app.route("/goods", methods = ['GET', 'POST'])
 def goods():
-    dotauser = Dota2SQL()
-    items = dotauser.get_items();
-    steamid = dotauser.get_steamid_user(session.get('user'))
+    items = Dota2SQL().get_items();
+    steamid = Dota2SQL().get_steamid_user(session.get('user'))
     steam_msg = None
-    steamid = dotauser.get_steamid_user(session.get('user'))
+    steamid = Dota2SQL().get_steamid_user(session.get('user'))
     if steamid is None:
         pass
     else:
-        steam_msg = dotauser.get_steam_msg(steamid)
+        steam_msg = Dota2SQL().get_steam_msg(steamid)
     return render_template('goods.html',
         title = 'Goods',
-        steam_msg =steam_msg,
+        steam_msg = steam_msg['players'][0],
         items = items,
+        accountid = accountid,
         user = session['user'])
 
 #setting
 @app.route("/setting", methods = ['GET', 'POST'])
 def setting():
-    dotauser = Dota2SQL()
-    steamid = dotauser.get_steamid_user(session.get('user'))
+    steamid = Dota2SQL().get_steamid_user(session.get('user'))
     steam_msg = None
     if steamid is None:
         pass
     else:
-        steam_msg = dotauser.get_steam_msg(steamid)
-    user = dotauser.get_user(session['user'])
+        steam_msg = Dota2SQL().get_steam_msg(steamid)
+    user = Dota2SQL().get_user(session['user'])
     if request.method == 'POST':
         steamid = request.form["steamid"] 
         accountid = request.form["accountid"] 
-        dotauser.set_steam_id(user[0][0],int(steamid))
-        dotauser.set_account_id(user[0][0],int(accountid))
+        print(user[0][0])
+        print(int(steamid))
+        Dota2SQL().set_steam_id(user[0][0],int(steamid))
+        Dota2SQL().set_account_id(user[0][0],int(accountid))
     return render_template('setting.html',
         steam_msg =steam_msg,
         user = session['user'],
@@ -213,13 +218,12 @@ def setting():
 #followers
 @app.route("/followers", methods = ['GET', 'POST'])
 def followers():
-    dotauser = Dota2SQL()
-    user = dotauser.get_user(session['user'])
-    followers = dotauser.get_watch_list(user[0][0])
+    user = Dota2SQL().get_user(session['user'])
+    followers = Dota2SQL().get_watch_list(user[0][0])
     if request.method == 'POST':
         accountid = request.form["accountid"] 
         print(user[0][0])
-        dotauser.add_watch_list(user[0][0],int(accountid))
+        Dota2SQL().add_watch_list(user[0][0],int(accountid))
     return render_template('followers.html',
         user = session['user'],
         followers = followers,
