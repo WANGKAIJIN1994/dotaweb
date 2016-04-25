@@ -27,7 +27,6 @@ def index():
             pass
         else:
             match_history = Dota2SQL().get_match_history(accountid)
-            #print(match_history)
     return render_template("index.html",
         title = 'Home',
         steam_msg = msg,
@@ -211,9 +210,7 @@ def goods():
 #setting
 @app.route("/setting", methods = ['GET', 'POST'])
 def setting():
-    print(session.get('user'))
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
-    print(session.get('user'))
     msg = None
     if steamid is None:
         pass
@@ -229,14 +226,11 @@ def setting():
         if accountid is '':
             return  redirect('/illegal')
         if(Dota2SQL().set_steam_id(user[0][0],int(steamid)) == -1):
-            print("steamid illegal")
             return  redirect('/illegal')
         else:
             if  Dota2SQL().get_match_history(accountid) is None:
-                print("accountid illegal")
                 return  redirect('/illegal')
             else:
-                print("accountid")
                 Dota2SQL().set_account_id(user[0][0],int(accountid))
                 return  redirect('/index')
     return render_template('setting.html',
@@ -296,7 +290,6 @@ def follower_match():
             pass
         else:
             match_history = Dota2SQL().get_match_history(accountid)
-            #print(match_history)
     return render_template("follower_match.html",
         title = 'Follower_Match',
         steam_msg = msg,
@@ -309,6 +302,7 @@ def follower_match():
 @app.route("/illegal")
 def illegal():
     return render_template('illegal.html',
+        user = session['user'] ,
         title = 'Illegal')
 
 
@@ -316,6 +310,7 @@ def illegal():
 @app.route("/follower_illegal")
 def followerIllegal():
     return render_template('follower_illegal.html',
+         user = session['user'] ,
         title = 'FollowerIllegal')
 
 

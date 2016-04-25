@@ -1,29 +1,32 @@
-<html>
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-   <title>Illegal - Dodata</title>
-   <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-   <script src="jquery/jquery.min.js"></script>
-   <script src="bootstrap/js/bootstrap.min.js"></script>
-   <script> 
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<script> 
 	var t = 3;//设定跳转的时间 
 	setInterval("refer()",1000); //启动1秒定时 
 	function refer(){ 
-	if(t==0){ 
-		location="http://localhost:5000/followers"; //#设定跳转的链接地址 
+		if(t==0){ 
+			window.history.back(-1);
 		} 
-	document.getElementById('show').innerHTML="The follower you have committed is illegal"; // 显示倒计时 
-	if(t==0){ 
-	} else{
-		t--; 
-	}
+		if(t==0){ 
+		} else{
+			t--; 
+		}
 	
 	} 
 </script> 
-</head>
-<body>
-<div class="container" >
-      <div id="show"></div>
-</div>
-</body>
-</html>
+
+
+   <div class="container" >
+       <br>
+         <br>
+         <br>
+         <br>
+      <!-- left -->
+      <div class="col-lg-8 col-md-offset-2">
+          <div><font size="7" color="red">The AccountID of the follower is illegal.</font></div>
+    </div>
+    <!-- left over -->
+  </div>
+  {% endblock %}
