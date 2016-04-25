@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 @app.route("/")
 @app.route("/index")
 def index():
-    steam_msg = None
+    msg = None
     match_history = None
     if session.get('user') is  None:
        return redirect('/login')
@@ -19,6 +19,7 @@ def index():
             pass
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
+            msg = steam_msg['players'][0]
         if accountid is None:
             pass
         else:
@@ -26,7 +27,7 @@ def index():
             #print(match_history)
     return render_template("index.html",
         title = 'Home',
-        steam_msg = steam_msg['players'][0],
+        steam_msg = msg,
         accountid = accountid,
         match_history = match_history,
         user = session['user'])
@@ -160,17 +161,18 @@ def sendEmail(username, password, email) :
 def hero():
     heroes = Dota2SQL().get_heroes();
     abilities = Dota2SQL().get_heroes_abilities();
-    steam_msg = None
+    msg = None
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     accountid = Dota2SQL().get_accountid_user(session.get('user'))
     if steamid is None:
         pass
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
+        msg = steam_msg['players'][0]
     return render_template('hero.html',
         title = 'Heroes',
         heroes = heroes,
-        steam_msg = steam_msg['players'][0],
+        steam_msg = msg,
         accountid = accountid,
         abilities = abilities,
         user = session['user'])
@@ -179,16 +181,17 @@ def hero():
 def goods():
     items = Dota2SQL().get_items();
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
-    steam_msg = None
+    msg = None
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     accountid = Dota2SQL().get_accountid_user(session.get('user'))
     if steamid is None:
         pass
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
+        msg = steam_msg['players'][0]
     return render_template('goods.html',
         title = 'Goods',
-        steam_msg = steam_msg['players'][0],
+        steam_msg = msg,
         items = items,
         accountid = accountid,
         user = session['user'])
@@ -197,11 +200,12 @@ def goods():
 @app.route("/setting", methods = ['GET', 'POST'])
 def setting():
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
-    steam_msg = None
+    msg = None
     if steamid is None:
         pass
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
+        msg = steam_msg['players'][0]
     user = Dota2SQL().get_user(session['user'])
     if request.method == 'POST':
         steamid = request.form["steamid"] 
@@ -217,7 +221,7 @@ def setting():
                 return  redirect('/index')
         Dota2SQL().set_account_id(user[0][0],int(accountid))
     return render_template('setting.html',
-        steam_msg = steam_msg['players'][0],
+        steam_msg = msg,
         user = session['user'],
         title = 'Setting')
 
@@ -237,6 +241,7 @@ def followers():
     return render_template('followers.html',
         user = session['user'],
         followers = followers,
+        accountid = accountid,
         title = 'Followers')
 
 
@@ -253,7 +258,7 @@ def match_detail():
 
 @app.route("/follower_match")
 def follower_match():
-    steam_msg = None
+    msg = None
     match_history = None
     accountid = request.args.get('accountid','')
     if session.get('user') is  None:
@@ -264,6 +269,7 @@ def follower_match():
             pass
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
+            msg = steam_msg['players'][0]
         if accountid is None:
             pass
         else:
@@ -271,7 +277,7 @@ def follower_match():
             #print(match_history)
     return render_template("follower_match.html",
         title = 'Follower_Match',
-        steam_msg = steam_msg['players'][0],
+        steam_msg = msg,
         accountid = accountid,
         match_history = match_history,
         user = session['user'])
