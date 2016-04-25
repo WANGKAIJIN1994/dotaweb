@@ -1,7 +1,7 @@
 from flask import render_template,  redirect, session, url_for, request,flash
 from app import app
 from dota2sql import Dota2SQL
-import smtplib, base64  
+import smtplib, base64, datetime, time
 from email.mime.text import MIMEText  
 
 
@@ -20,6 +20,8 @@ def index():
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
             msg = steam_msg['players'][0]
+            ltime=time.localtime(msg['lastlogoff'])
+            timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
         if accountid is None:
             pass
         else:
@@ -29,6 +31,7 @@ def index():
         title = 'Home',
         steam_msg = msg,
         accountid = accountid,
+        timeStr =  timeStr,
         match_history = match_history,
         user = session['user'])
 
@@ -169,11 +172,14 @@ def hero():
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
         msg = steam_msg['players'][0]
+        ltime=time.localtime(msg['lastlogoff'])
+        timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
     return render_template('hero.html',
         title = 'Heroes',
         heroes = heroes,
         steam_msg = msg,
         accountid = accountid,
+        timeStr = timeStr,
         abilities = abilities,
         user = session['user'])
 #goods
@@ -189,10 +195,13 @@ def goods():
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
         msg = steam_msg['players'][0]
+        ltime=time.localtime(msg['lastlogoff'])
+        timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
     return render_template('goods.html',
         title = 'Goods',
         steam_msg = msg,
         items = items,
+        timeStr = timeStr,
         accountid = accountid,
         user = session['user'])
 
@@ -241,7 +250,6 @@ def followers():
     return render_template('followers.html',
         user = session['user'],
         followers = followers,
-        accountid = accountid,
         title = 'Followers')
 
 
@@ -270,6 +278,9 @@ def follower_match():
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
             msg = steam_msg['players'][0]
+            ltime=time.localtime(msg['lastlogoff'])
+            timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+
         if accountid is None:
             pass
         else:
@@ -279,6 +290,7 @@ def follower_match():
         title = 'Follower_Match',
         steam_msg = msg,
         accountid = accountid,
+        timeStr = timeStr,
         match_history = match_history,
         user = session['user'])
 
