@@ -9,14 +9,14 @@
 	var t = 3;//设定跳转的时间 
 	setInterval("refer()",1000); //启动1秒定时 
 	function refer(){ 
-	if(t==0){ 
-		location="http://localhost:5000/setting"; //#设定跳转的链接地址 
+		if(t==0){ 
+			window.history.back(-1);
 		} 
-	document.getElementById('show').innerHTML="The SteamID you have commit is illegal"; // 显示倒计时 
-	if(t==0){ 
-	} else{
-		t--; 
-	}
+		document.getElementById('show').innerHTML="The SteamID you have commit is illegal"; // 显示倒计时 
+		if(t==0){ 
+		} else{
+			t--; 
+		}
 	
 	} 
 </script> 

@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 def index():
     msg = None
     match_history = None
+    timeStr = None
     if session.get('user') is  None:
        return redirect('/login')
     else:
@@ -165,6 +166,7 @@ def hero():
     heroes = Dota2SQL().get_heroes();
     abilities = Dota2SQL().get_heroes_abilities();
     msg = None
+    timeStr = None
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     accountid = Dota2SQL().get_accountid_user(session.get('user'))
     if steamid is None:
@@ -188,6 +190,7 @@ def goods():
     items = Dota2SQL().get_items();
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     msg = None
+    timeStr = None
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     accountid = Dota2SQL().get_accountid_user(session.get('user'))
     if steamid is None:
@@ -208,7 +211,9 @@ def goods():
 #setting
 @app.route("/setting", methods = ['GET', 'POST'])
 def setting():
+    print(session.get('user'))
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
+    print(session.get('user'))
     msg = None
     if steamid is None:
         pass
@@ -218,17 +223,22 @@ def setting():
     user = Dota2SQL().get_user(session['user'])
     if request.method == 'POST':
         steamid = request.form["steamid"] 
-        accountid = request.form["accountid"] 
-        print(Dota2SQL().set_steam_id(user[0][0],int(steamid)))
+        accountid = request.form["accountid"]
+        if steamid is '':
+            return  redirect('/illegal')
+        if accountid is '':
+            return  redirect('/illegal')
         if(Dota2SQL().set_steam_id(user[0][0],int(steamid)) == -1):
+            print("steamid illegal")
             return  redirect('/illegal')
         else:
             if  Dota2SQL().get_match_history(accountid) is None:
+                print("accountid illegal")
                 return  redirect('/illegal')
             else:
+                print("accountid")
                 Dota2SQL().set_account_id(user[0][0],int(accountid))
                 return  redirect('/index')
-        Dota2SQL().set_account_id(user[0][0],int(accountid))
     return render_template('setting.html',
         steam_msg = msg,
         user = session['user'],
@@ -268,6 +278,7 @@ def match_detail():
 def follower_match():
     msg = None
     match_history = None
+    timeStr = None
     accountid = request.args.get('accountid','')
     if session.get('user') is  None:
        return redirect('/login')

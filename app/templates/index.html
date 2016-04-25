@@ -64,7 +64,9 @@
 		   <div class="list-group-item" style = "background-color:#111111;color:white">
 		      <h4 class="list-group-item-heading">
 		         Last Logoff:<br/>
+		         {% if timeStr %}
 		         {{ timeStr }}
+		         {% endif %}
 		      </h4>
 		   </div>
 		   {% else %}
