@@ -2,26 +2,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-   <div class="container" >
+	<div class="container" >
     	<!-- left -->
+    	<div class="col-sm-8"  style = "background-color:#111111;color:white">
+    		
+    		<font size="7" color="red">AccountID:{{ follower_accountid }}</font>
+    	</div>
 		<div class="panel panel-default col-sm-8"  style = "background-color:#111111;color:white">
+		{% if match_history %}
 		   <table class="table">
-		      <th>Picture</th><th>Name </th><th>Cost</th><th>SecretShop</th><th>SideShop</th>
-		      {% for item in items %}
+		      <th>Hero</th><th>Kill</th><th>Assists</th> <th>Deaths</th> <th>Gold</th> <th>Hero_Damage</th> 
+		      {% for match in match_history %}
 		      <tr>
-		      	<td><img width="70" height="50" src="{{ item[7] }}"/></td>
-		      	<td>{{ item[5] }}</td>
-		      	<td>{{ item[6] }}</td>
-		      	{% if item[3] == 1 %}<td>YES</td>{% else %}<td>NO</td>
-		      	{% endif %}
-		      	{% if item[4] == 1 %}<td>YES</td>{% else %}<td>NO</td>
-		      	{% endif %}
+		      	<td><a href="/match_detail?match_id={{match['match_id'] }}">
+		      	<img width="70" height="50" src="{{ 								match['heroes_url_ful_large_protrait'] }}"/></a>
+		      	</td>
+			    <td>{{ match['kills'] }}</td>
+			    <td>{{ match['assists'] }}</td>
+			    <td>{{ match['deaths'] }}</td>
+			    <td>{{ match['gold'] }}</td>
+			    <td>{{ match['hero_damage'] }}</td>
 		      </tr>
-		      {% endfor %}
+		      {% endfor %}	     
 		   </table>
+		{% else %}
+		<h1>Please set AccountID</h1>
+		 {% endif %}
 		</div>
 		<!-- left over -->
-<!-- right -->
+
+		<!-- right -->
 		<div class="list-group col-sm-3 pull-right" style = "margin:0 auto;text-align:center;">
 			{% if steam_msg %}
 			<div class="list-group-item active" style = "background-color:#111111;color:white">
@@ -104,4 +114,6 @@
 		</div>
 		<!-- right over -->
 	</div>
-  {% endblock %}
+{% endblock %}
+
+

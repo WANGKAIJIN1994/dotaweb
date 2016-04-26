@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-	<title>Sign In</title>
+	<title>Find Password</title>
 	<meta charset="UTF-8"/>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='login.css') }}"/>
     <script type="text/javascript" src="{{ url_for('static',filename='login.js') }}"></script>
@@ -27,6 +27,13 @@
 			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="password" placeholder="password:"/><br/>
 			<div id="error">{{error}}</div>
 			<input onkeydown="switchline(event)" class="login-input all-radius" type="password" name="confirm" placeholder="confirm password:"/><br/>
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+			{% for message in messages %}
+			<div id="error">{{message}}</div>
+			{% endfor %}
+		    {% endif %}
+		    {% endwith %}
 			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="submit" onclick="return check();" />
 			<input id="reset" class="login-btn all-radius btn-right" type="reset" value="Reset" />
 		</form>

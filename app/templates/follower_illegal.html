@@ -1,0 +1,32 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<script> 
+	var t = 3;//设定跳转的时间 
+	setInterval("refer()",1000); //启动1秒定时 
+	function refer(){ 
+		if(t==0){ 
+			window.history.back(-1);
+		} 
+		if(t==0){ 
+		} else{
+			t--; 
+		}
+	
+	} 
+</script> 
+
+
+   <div class="container" >
+       <br>
+         <br>
+         <br>
+         <br>
+      <!-- left -->
+      <div class="col-lg-8 col-md-offset-2">
+          <div><font size="7" color="red">The AccountID of the follower is illegal.</font></div>
+    </div>
+    <!-- left over -->
+  </div>
+  {% endblock %}

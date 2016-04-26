@@ -1,52 +1,121 @@
+<!-- extend base layout -->
 {% extends "base.html" %}
-{% block title %}hero{% endblock %}
-{% block wrap %}
-<table class="table">
-<caption>英雄统计(点击查看此英雄的所有比赛)</caption>
-<tr>
-	<th style="width:14%;">英雄</th>
-	<th style="width:14%;">使用次数</th>
-	<th style="width:14%;">胜率</th>
-	<th style="width:14%;">KDA(K/D/A)</th>
-	<th style="width:14%;">所有玩家平均KDA</th>
-	<th style="width:14%;">金钱分钟</th>
-	<th style="width:14%;">经验分钟</th>
-</tr>
-<tr>
-	<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-<tr class="tr1">
-	<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-<tr>
-	<td><img class="td-img" src="images/warlock_hphover.png"/>术士</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-<tr class="tr1">
-	<td><img class="td-img" src="images/zuus_hphover.png"/>术士</td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22%</p><div class="tdcolor"></div></td>
-	<td><p>22<span>(8.3/3.5/6.4)</span></p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-	<td><p>22</p><div class="tdcolor"></div></td>
-</tr>
-</table>
+
+{% block content %}
+   <div class="container" >
+    	<!-- left -->
+		<div class="panel panel-default col-sm-8"  style = "background-color:#111111;color:white">
+		   <table class="table">
+  			  
+		      <th>Picture</th><th>Name </th><th>Abilities</th>
+		      {% for hero in heroes %}
+		      <tr>
+		      	<td><img  width="70" height="50" src="{{ hero[4] }}"/></td>
+		      	<td>{{hero[2]}}</td>
+		      	<td>
+		      		
+
+		      		{% for ability in abilities %}
+		      		{% if ability[2] in hero %}
+		      	
+		      		<img width="50" height="50" src="http://cdn.dota2.com.cn/apps/dota2/images/abilities/{{ability[1]}}_lg.png" data-toggle="tooltip" data-placement="top" title="{{ability[1]}}"/>
+		     
+		      		{% endif %}
+		      		{% endfor %}
+		  
+		      	</td>
+		      </tr>
+		      {% endfor %}
+
+		   </table>
+		</div>
+		<!-- left over -->
+
+		<!-- right -->
+		<div class="list-group col-sm-3 pull-right" style = "margin:0 auto;text-align:center;">
+			{% if steam_msg %}
+			<div class="list-group-item active" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         <span class="glyphicon glyphicon-user"></span>User Information
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+				<img src="{{steam_msg['avatarfull']}}" class="img-circle" />
+			</div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         SteamID:<br/>
+		         {{steam_msg['steamid']}}
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		      <a href="{{steam_msg['profileurl']}}">steamcommunity</a>
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		     {% if accountid %}
+		      <h4 class="list-group-item-heading">	
+		      AccountID:<br/>
+		      {{accountid}}	
+		      </h4>
+		      {% else %}
+		      <h4 class="list-group-item-heading">	
+		      	AccountID:<br/>      	
+		      </h4>
+		      {% endif %}
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         Last Logoff:<br/>
+		         {% if timeStr %}
+		         {{ timeStr }}
+		         {% endif %}
+		      </h4>
+		   </div>
+		   {% else %}
+		   <div class="list-group-item active" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         <span class="glyphicon glyphicon-user"></span>User Information
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+				<img src="{{ url_for('static',filename='images/user.png') }}" class="img-circle" />
+			</div>
+			<div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         SteamID:<br/>
+		        
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		      <a href="#">steamcommunity</a>
+		      </h4>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		   	{% if accountid %}
+		      <h4 class="list-group-item-heading">	
+		      AccountID:<br/>
+		      {{accountid}}	
+		      </h4>
+		      {% else %}
+		      <h4 class="list-group-item-heading">	
+		      	AccountID:<br/>      	
+		      </h4>
+		      {% endif %}
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         Last Logoff:<br/>
+		      </h4>
+		   </div>
+		   {% endif %}
+		</div>
+		<!-- right over -->
+	</div>
+	<script>
+   $(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
+   <!-- footer -->
 {% endblock %}

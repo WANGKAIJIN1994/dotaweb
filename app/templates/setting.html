@@ -1,0 +1,41 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+   <div class="container" >
+      <form name="form_login" action="" method="post">
+		<div class="list-group col-sm-11 pull-right" style = "margin:0 auto;text-align:center;">
+			
+			<div class="list-group-item active" style = "background-color:#111111;color:white">
+		      <h4 class="list-group-item-heading">
+		         <span class="glyphicon glyphicon-user"></span>User Settings
+		      </h4>
+		   </div>
+		   {% if steam_msg %}
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+				<img src="{{ steam_msg['avatarfull'] }}" class="img-circle" />
+			</div>
+			{% else %}
+			 <div class="list-group-item" style = "background-color:#111111;color:white">
+				<img src="{{ url_for('static',filename='images/user.png') }}" class="img-circle" />
+			</div>
+		   {% endif %}
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		         <div class="input-group col-sm-5" style = "margin:0 auto;text-align:center;">
+			         <input type="text" class="form-control  pull-left" placeholder="SteamID" name="steamid">
+			     </div>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		         <div class="input-group col-sm-5" style = "margin:0 auto;text-align:center;">
+			         <input type="text" class="form-control  pull-left" placeholder="AccountID" name="accountid">
+			     </div>
+		   </div>
+		   <div class="list-group-item" style = "background-color:#111111;color:white">
+		      <div class="input-group col-sm-2" style = "margin:0 auto;text-align:center;">
+			         <input type="submit" value="Submit" class="form-control  pull-left">
+			   </div>
+		   </div>
+		</div>
+	  </form>
+	</div>
+  {% endblock %}

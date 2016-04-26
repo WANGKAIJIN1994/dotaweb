@@ -5,8 +5,7 @@
 *.egg-info
 dist
 build
-/flask/
 /venv/
-
-
 *.db
+/.idea/
+makesql/all.sql
