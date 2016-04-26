@@ -12,7 +12,7 @@
 		document.body.style.backgroundImage = "url(static/images/p_0"+bgin+".jpg)";
     </script>
 	<div class="nav">
-		<a href="DotaMax.html">
+		<a href="index.html">
 			<img class="nav-head" src="{{ url_for('static',filename='./images/max_logo3.png') }}"  onmouseover="this.src='{{ url_for('static',filename='./images/max_logo2.png') }}'" onmouseout="this.src='{{ url_for('static',filename='./images/max_logo3.png') }}'"/>
 		</a>
 	</div>
@@ -33,7 +33,7 @@
 			{% endfor %}
 		    {% endif %}
 		    {% endwith %}
-			<div><a style="color:white;" href="http://localhost:5000/pwdChange">forget password</a></div>
+			<div id="forgetinfo"><a style="color:white;" href="http://localhost:5000/pwdChange">forget password</a></div>
 			<input id="switchLR" class="login-btn all-radius btn-left" type="submit" value="Sign In" onclick="return check();" />
 			<input class="login-btn all-radius btn-right" type="reset" value="Reset" onclick="changebgimg();" />
 		</form>

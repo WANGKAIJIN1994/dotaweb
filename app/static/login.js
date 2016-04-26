@@ -22,6 +22,7 @@ function show_Login(){
     document.getElementById("login").style.color = "white";
     document.getElementById("switchLR").setAttribute("value","SignIn");
     document.form_login.action = "login";
+    document.getElementById("forgetinfo").style.display = "block";
 	 changebgimg();
 }
 
@@ -31,6 +32,7 @@ function show_Register(){
     document.getElementById("register").style.color = "white";
     document.getElementById("switchLR").setAttribute("value","Register");
     document.form_login.action = "register";
+    document.getElementById("forgetinfo").style.display = "none";
     changebgimg();
 }
 
