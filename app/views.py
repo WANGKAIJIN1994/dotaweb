@@ -273,7 +273,7 @@ def follower_match():
     msg = None
     match_history = None
     timeStr = None
-    accountid = request.args.get('accountid','')
+    follower_accountid = request.args.get('accountid','')
     if session.get('user') is  None:
        return redirect('/login')
     else:
@@ -286,14 +286,14 @@ def follower_match():
             ltime=time.localtime(msg['lastlogoff'])
             timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
 
-        if accountid is None:
+        if follower_accountid is None:
             pass
         else:
-            match_history = Dota2SQL().get_match_history(accountid)
+            match_history = Dota2SQL().get_match_history(follower_accountid)
     return render_template("follower_match.html",
         title = 'Follower_Match',
         steam_msg = msg,
-        accountid = accountid,
+        follower_accountid = follower_accountid,
         timeStr = timeStr,
         match_history = match_history,
         user = session['user'])
