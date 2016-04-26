@@ -75,7 +75,7 @@ def register():
             go = 0
             flash('This username has been registered')
         if backdata == 'NOTHING_EXIST':
-            sendEmail(username, password, email)    
+            sendEmail(username, password, email)
             return redirect('/login')
     return render_template('login.html',
         error = registererror)

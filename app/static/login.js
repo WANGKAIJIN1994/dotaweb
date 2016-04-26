@@ -15,6 +15,9 @@ function check(){
 			return false;
 		}
 	}
+    if(document.getElementById('switchLR').value == 'Register'){
+        alert("please check your email!");
+    }
 }
 
 function show_Login(){
