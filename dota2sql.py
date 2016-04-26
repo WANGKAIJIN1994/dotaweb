@@ -397,16 +397,43 @@ class Dota2SQL:
                     additional_units[player_slot] = list()
                 additional_units[player_slot].append(additional_unit)
 
+        (dire_kill, radiant_kill, dire_damage, radiant_damage, radiant_xp, dire_xp, radiant_gold, dire_gold) = (0 for x in range(8))
         for player in players:
             if ability_upgrades.get(player['player_slot']) is not None:
                 player['ability_upgrades'] = ability_upgrades[player['player_slot']]
             if additional_units.get(player['player_slot']) is not None:
                 player['additional_unit'] = additional_units[player['player_slot']]
+            if player['player_slot'] < 128:
+                radiant_kill += player['kills']
+                radiant_damage += player['hero_damage'] if player.get('hero_damage') is not None else 0
+                radiant_xp += player['xp_per_min'] if player.get('xp_pre_min') is not None else 0
+                radiant_gold += player['gold_per_min']
+            else:
+                dire_kill += player['kills']
+                dire_damage += player['hero_damage'] if player.get('hero_damage') is not None else 0
+                dire_xp += player['xp_pre_min'] if player.get('xp_pre_min') is not None else 0
+                dire_gold += player['gold_per_min']
+
+            def cul(data):
+                return data * match['duration'] / 60
+
+        radiant_xp = cul(radiant_xp)
+        radiant_gold = cul(radiant_gold)
+        dire_xp = cul(dire_xp)
+        dire_gold = cul(dire_gold)
 
         match['players'] = players
         # 统计战斗信息
-        # dire_kill = 0
-        # radi
+        match_count = dict()
+        match_count['radiant_kill'] = radiant_kill
+        match_count['radiant_damage'] = radiant_damage
+        match_count['dire_kill'] = dire_kill
+        match_count['dire_damage'] = dire_damage
+        match_count['radiant_xp'] = radiant_xp
+        match_count['radiant_gold'] = radiant_gold
+        match_count['dire_xp'] = dire_xp
+        match_count['dire_gold'] = dire_gold
+        match['count'] = match_count
         return match
 
     # 用于获取某人的所有比赛 从数据库中 若没有则返回无 获取前要先爬 否则一定没有
@@ -437,9 +464,11 @@ def test3():
     # Dota2SQL.update_match_history(account_id=69010155)
     # match = Dota2SQL.get_match_history(account_id=160797770)
     # print(match[0])
-    match = Dota2SQL.get_match_details(match_id=2146760485)
+    for i in range(1108685510,1108685510+10):
 
-    print(json.dumps(match))
+        match = Dota2SQL.get_match_details(match_id=i)
+
+        print(match is not None)
 
 
 def test4():
@@ -452,6 +481,7 @@ if '__main__' == __name__:
     # test4()
     # print(Dota2SQL.get_match_history(account_id=160797770))
     # print(Dota2SQL.api.get_player_summaries(steamids=76561198121063198))
-    print(Dota2SQL.get_steam_msg(76561198121063198)['players'][0])
+    # print(Dota2SQL.get_steam_msg(76561198121063198)['players'][0])
     # print(json.dumps(Dota2SQL.get_match_details(1367828649)))
     # print(len(Dota2SQL.get_steam_msg(88)['players']))
+    # test3()
