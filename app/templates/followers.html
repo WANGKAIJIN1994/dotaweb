@@ -17,10 +17,16 @@
                   <button class="btn btn-default" type="submit">
                     Add!
                   </button>
-               </span>
-            
-            </div><!-- /input-group -->
+               </span>          
+            </div>
           </form>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <div><font size="7" color="red">{{message}}</font></div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
          </div>
          <br>
          <br>

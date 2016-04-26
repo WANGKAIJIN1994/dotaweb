@@ -26,15 +26,17 @@
 			     </div>
 		   </div>
 		   <div class="list-group-item" style = "background-color:#111111;color:white">
-		         <div class="input-group col-sm-5" style = "margin:0 auto;text-align:center;">
-			         <input type="text" class="form-control  pull-left" placeholder="AccountID" name="accountid">
-			     </div>
-		   </div>
-		   <div class="list-group-item" style = "background-color:#111111;color:white">
 		      <div class="input-group col-sm-2" style = "margin:0 auto;text-align:center;">
-			         <input type="submit" value="Submit" class="form-control  pull-left">
+			         <input type="submit" value="Search" class="form-control  pull-left">
 			   </div>
 		   </div>
+		   {% with messages = get_flashed_messages() %}
+			{% if messages %}
+			{% for message in messages %}
+			<div><font size="7" color="red">{{message}}</font></div>
+			{% endfor %}
+		    {% endif %}
+		    {% endwith %}
 		</div>
 	  </form>
 	</div>
