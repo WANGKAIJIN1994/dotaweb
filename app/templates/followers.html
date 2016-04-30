@@ -2,6 +2,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script>
+function checkinput(){
+  var input = document.form_login.accountid.value;
+  if(input.length > 20){
+     alert('the word is too long!');
+  } 
+}
+</script
    <div class="container" >
        <br>
          <br>
@@ -11,8 +19,7 @@
       <div class="col-lg-8 col-md-offset-2">
           <form name="form_login" action="" method="post">
             <div class="input-group">
-           
-               <input type="text" name="accountid" class="form-control">
+               <input type="text" name="accountid" class="form-control" onkeydown = "checkinput()">
                <span class="input-group-btn">
                   <button class="btn btn-default" type="submit">
                     Add!
