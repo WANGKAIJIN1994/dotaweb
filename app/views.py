@@ -207,11 +207,12 @@ def goods():
         accountid = accountid,
         user = session['user'])
 
-#setting
-@app.route("/setting", methods = ['GET', 'POST'])
-def setting():
+#set_steamid
+@app.route("/set_steamid", methods = ['GET', 'POST'])
+def set_steamid():
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     msg = None
+    error = None
     if steamid is None:
         pass
     else:
@@ -220,23 +221,44 @@ def setting():
     user = Dota2SQL().get_user(session['user'])
     if request.method == 'POST':
         steamid = request.form["steamid"] 
-        accountid = request.form["accountid"]
         if steamid is '':
             return  redirect('/illegal')
-        if accountid is '':
-            return  redirect('/illegal')
         if(Dota2SQL().set_steam_id(user[0][0],int(steamid)) == -1):
-            return  redirect('/illegal')
+            flash('we are searching the data from the dota2 offical website, please wait a moment.')
+            return  redirect('/set_steamid')
         else:
-            if  Dota2SQL().get_match_history(accountid) is None:
-                return  redirect('/illegal')
-            else:
-                Dota2SQL().set_account_id(user[0][0],int(accountid))
-                return  redirect('/index')
-    return render_template('setting.html',
+            return  redirect('/index')
+    return render_template('set_steamid.html',
         steam_msg = msg,
         user = session['user'],
-        title = 'Setting')
+        title = 'Set SteamID')
+
+
+#set_accountid
+@app.route("/set_accountid", methods = ['GET', 'POST'])
+def set_accountid():
+    steamid = Dota2SQL().get_steamid_user(session.get('user'))
+    msg = None
+    error = None
+    if steamid is None:
+        pass
+    else:
+        steam_msg = Dota2SQL().get_steam_msg(steamid)
+        msg = steam_msg['players'][0]
+    user = Dota2SQL().get_user(session['user'])
+    if request.method == 'POST':
+        accountid = request.form["accountid"] 
+        if accountid is '':
+            return  redirect('/illegal')
+        if(Dota2SQL().get_match_history(accountid) is None):
+            flash('we are searching the data from the dota2 offical website, please wait a moment.')
+            return  redirect('/set_accountid')
+        else:
+            return  redirect('/index')
+    return render_template('set_accountid.html',
+        steam_msg = msg,
+        user = session['user'],
+        title = 'Set AccountID')
 
 
 #followers
@@ -247,7 +269,7 @@ def followers():
     if request.method == 'POST':
         accountid = request.form["accountid"] 
         if  Dota2SQL().get_match_history(accountid) is None:
-                return  redirect('/follower_illegal')
+                flash('we are searching the data from the dota2 offical website, please wait a moment.')
         else:
             Dota2SQL().add_watch_list(user[0][0],int(accountid))
         return redirect('/followers')
