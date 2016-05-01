@@ -439,7 +439,7 @@ class Dota2SQL:
     # 用于获取某人的所有比赛 从数据库中 若没有则返回无 获取前要先爬 否则一定没有
     @staticmethod
     def get_match_history(account_id):
-        Dota2SQL.update_match_history(account_id=account_id)
+        #Dota2SQL.update_match_history(account_id=account_id)
         sql = 'SELECT * FROM `player_match` WHERE `account_id` = %s' % account_id
         data = Dota2SQL.__query(sql, True)
         return data if data is not None and len(data) > 0 else None
@@ -485,5 +485,5 @@ if '__main__' == __name__:
     # print(json.dumps(Dota2SQL.get_match_details(1367828649)))
     # print(len(Dota2SQL.get_steam_msg(88)['players']))
     # test3()
-    print(Dota2SQL.get_match_history(account_id=160797770))
+    print(Dota2SQL.get_match_history(account_id=220014521))
     print("nihao")

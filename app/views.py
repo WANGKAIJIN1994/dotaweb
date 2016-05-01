@@ -85,6 +85,8 @@ def register():
 #用户退出登录
 @app.route("/logout")
 def logout():
+    if session.get('user') is  None:
+       return redirect('/login')
     session.pop('user',None)
     return redirect('/index')
 
@@ -118,7 +120,7 @@ def pwdChange():
             smtpserver = 'smtp.163.com'  
             username = '18233698150'  
             password = '1000121143'      
-            msg = MIMEText('<html><h1>你好,请点击链接完成修改密码</h1><p>http://localhost:5000/pwdChangeEmail?'+message+'</p></html>','html','utf-8')      
+            msg = MIMEText('<html><h1>Please click this link to find your password</h1><p>http://localhost:5000/pwdChangeEmail?'+message+'</p></html>','html','utf-8')      
             msg['Subject'] = subject       
             smtp = smtplib.SMTP()  
             smtp.connect('smtp.163.com')  
@@ -134,7 +136,7 @@ def pwdChange():
 def pwdChangeEmail():
     password = request.args.get('password','')
     email = request.args.get('email','')
-    Dota2SQL().changepwd(jiemi(email),jiemi(password))
+    Dota2SQL().change_pwd(jiemi(email),jiemi(password))
     return redirect('/login')
 
 
@@ -151,7 +153,7 @@ def sendEmail(username, password, email) :
     smtpserver = 'smtp.163.com'  
     username = '18233698150'  
     password = '1000121143'      
-    msg = MIMEText('<html><h1>你好,请点击链接完成登录</h1><p>http://localhost:5000/commitRegister?'+message+'</p></html>','html','utf-8')      
+    msg = MIMEText('<html><h1>Please click this link to complete the register</h1><p>http://localhost:5000/commitRegister?'+message+'</p></html>','html','utf-8')      
     msg['Subject'] = subject       
     smtp = smtplib.SMTP()  
     smtp.connect('smtp.163.com')  
@@ -162,6 +164,8 @@ def sendEmail(username, password, email) :
 #hero
 @app.route("/heroes", methods = ['GET', 'POST'])
 def hero():
+    if session.get('user') is  None:
+       return redirect('/login')
     heroes = Dota2SQL().get_heroes();
     abilities = Dota2SQL().get_heroes_abilities();
     msg = None
@@ -186,6 +190,8 @@ def hero():
 #goods
 @app.route("/goods", methods = ['GET', 'POST'])
 def goods():
+    if session.get('user') is  None:
+       return redirect('/login')
     items = Dota2SQL().get_items();
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     msg = None
@@ -210,6 +216,8 @@ def goods():
 #set_steamid
 @app.route("/set_steamid", methods = ['GET', 'POST'])
 def set_steamid():
+    if session.get('user') is  None:
+       return redirect('/login')
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     msg = None
     error = None
@@ -224,7 +232,7 @@ def set_steamid():
         if steamid is '':
             return  redirect('/illegal')
         if(Dota2SQL().set_steam_id(user[0][0],int(steamid)) == -1):
-            flash('we are searching the data from the dota2 offical website, please wait a moment.')
+            flash('This steamid is illegal!')
             return  redirect('/set_steamid')
         else:
             return  redirect('/index')
@@ -237,6 +245,8 @@ def set_steamid():
 #set_accountid
 @app.route("/set_accountid", methods = ['GET', 'POST'])
 def set_accountid():
+    if session.get('user') is  None:
+       return redirect('/login')
     steamid = Dota2SQL().get_steamid_user(session.get('user'))
     msg = None
     error = None
@@ -251,9 +261,10 @@ def set_accountid():
         if accountid is '':
             return  redirect('/illegal')
         if(Dota2SQL().get_match_history(accountid) is None):
-            flash('we are searching the data from the dota2 offical website, please wait a moment.')
+            flash('This accountid is illegal!')
             return  redirect('/set_accountid')
         else:
+            Dota2SQL().set_account_id(user[0][0], int(accountid))
             return  redirect('/index')
     return render_template('set_accountid.html',
         steam_msg = msg,
@@ -264,12 +275,23 @@ def set_accountid():
 #followers
 @app.route("/followers", methods = ['GET', 'POST'])
 def followers():
+    if session.get('user') is  None:
+       return redirect('/login')
     user = Dota2SQL().get_user(session['user'])
     followers = Dota2SQL().get_watch_list(user[0][0])
+    useraccountid = Dota2SQL().get_accountid_user(session.get('user'))
     if request.method == 'POST':
         accountid = request.form["accountid"] 
+        print(accountid)
+        print(useraccountid)
+        if accountid is '':
+            return  redirect('/illegal')
         if  Dota2SQL().get_match_history(accountid) is None:
-                flash('we are searching the data from the dota2 offical website, please wait a moment.')
+            flash('This accountid is illegal!')
+            return redirect('/followers')
+        if accountid == str(useraccountid):
+            print('niyaocaonimama')
+            flash('This accountid is your own accountid!')
         else:
             Dota2SQL().add_watch_list(user[0][0],int(accountid))
         return redirect('/followers')
@@ -282,6 +304,8 @@ def followers():
 #match_detail
 @app.route("/match_detail")
 def match_detail():
+    if session.get('user') is  None:
+       return redirect('/login')
     match_id = request.args.get('match_id','')
     match_detail = Dota2SQL().get_match_details(match_id)
     return render_template('match_detail.html',
@@ -292,6 +316,8 @@ def match_detail():
 
 @app.route("/follower_match")
 def follower_match():
+    if session.get('user') is  None:
+       return redirect('/login')
     msg = None
     match_history = None
     timeStr = None
@@ -323,6 +349,8 @@ def follower_match():
 #setting illegal
 @app.route("/illegal")
 def illegal():
+    if session.get('user') is  None:
+       return redirect('/login')
     return render_template('illegal.html',
         user = session['user'] ,
         title = 'Illegal')
