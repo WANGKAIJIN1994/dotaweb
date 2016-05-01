@@ -485,5 +485,5 @@ if '__main__' == __name__:
     # print(json.dumps(Dota2SQL.get_match_details(1367828649)))
     # print(len(Dota2SQL.get_steam_msg(88)['players']))
     # test3()
-    print(Dota2SQL.get_match_history(account_id=220014521))
+    print(Dota2SQL.get_steam_msg(76561198302890423)['players'][0])
     print("nihao")

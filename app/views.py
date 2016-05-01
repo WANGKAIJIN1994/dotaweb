@@ -21,8 +21,11 @@ def index():
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
             msg = steam_msg['players'][0]
-            ltime=time.localtime(msg['lastlogoff'])
-            timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+            if 'lastlogoff' in msg:
+                ltime=time.localtime(msg['lastlogoff'])
+                timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+            else:
+                timeStr=None
         if accountid is None:
             pass
         else:
@@ -177,8 +180,11 @@ def hero():
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
         msg = steam_msg['players'][0]
-        ltime=time.localtime(msg['lastlogoff'])
-        timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+        if 'lastlogoff' in msg:
+            ltime=time.localtime(msg['lastlogoff'])
+            timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+        else:
+            timeStr=None
     return render_template('hero.html',
         title = 'Heroes',
         heroes = heroes,
@@ -203,8 +209,11 @@ def goods():
     else:
         steam_msg = Dota2SQL().get_steam_msg(steamid)
         msg = steam_msg['players'][0]
-        ltime=time.localtime(msg['lastlogoff'])
-        timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+        if 'lastlogoff' in msg:
+            ltime=time.localtime(msg['lastlogoff'])
+            timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+        else:
+            timeStr=None
     return render_template('goods.html',
         title = 'Goods',
         steam_msg = msg,
@@ -331,8 +340,11 @@ def follower_match():
         else:
             steam_msg = Dota2SQL().get_steam_msg(steamid)
             msg = steam_msg['players'][0]
-            ltime=time.localtime(msg['lastlogoff'])
-            timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+            if 'lastlogoff' in msg:
+                ltime=time.localtime(msg['lastlogoff'])
+                timeStr=time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+            else:
+                timeStr=None
 
         if follower_accountid is None:
             pass
