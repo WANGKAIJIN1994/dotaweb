@@ -3,18 +3,30 @@
 
 {% block content %}
 <script>
-function checkinput(event){
-  var keyCode = event.keyCode;
-  console.log(keyCode);
-  if (keyCode < 48 || keyCode > 57){
-    event.returnValue = false;
-  }
-  var input = document.form_login.accountid.value;
-  if(input.length > 20){
-     alert('the word is too long!');
+function checkNumber(obj){
+    var reg = /^[\d]+$/g;
+    if (!reg.test(obj.value)){
+        var txt = obj.value;
+        txt.replace(/[^0-9]+/, function (char, index, val) {//匹配第一次非数字字符
+            obj.value = val.replace(/\D/g, "");//将非数字字符替换成""
+            var rtextRange = null;
+            if (obj.setSelectionRange) {
+              obj.setSelectionRange(index, index);
+            } else {//支持ie
+              rtextRange = obj.createTextRange();
+              rtextRange.moveStart('character', index);
+              rtextRange.collapse(true);
+              rtextRange.select();
+            }
+        })
+    }
+    var input = document.form_login.accountid.value;
+    if(input.length > 20){
+       alert('the word is too long!');
+       document.form_login.accountid.value = " ";
   } 
 }
-</script
+</script>
    <div class="container" >
        <br>
          <br>
@@ -24,7 +36,7 @@ function checkinput(event){
       <div class="col-lg-8 col-md-offset-2">
           <form name="form_login" action="" method="post">
             <div class="input-group">
-               <input type="text" name="accountid" class="form-control" onkeydown = "checkinput(event)">
+               <input type="text" name="accountid" class="form-control" onkeyup="javascript:checkNumber(this)">
                <span class="input-group-btn">
                   <button class="btn btn-default" type="submit">
                     Add!
