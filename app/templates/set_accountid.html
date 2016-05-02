@@ -2,6 +2,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script>
+function checkinput(event){
+  var keyCode = event.keyCode;
+  console.log(keyCode);
+  if (keyCode < 48 || keyCode > 57){
+    event.returnValue = false;
+  }
+  var input = document.form_login.accountid.value;
+  if(input.length > 20){
+     alert('the word is too long!');
+  } 
+}
+</script
    <div class="container" >
       <form name="form_login" action="" method="post">
 		<div class="list-group col-sm-11 pull-right" style = "margin:0 auto;text-align:center;">
@@ -22,7 +35,7 @@
 		   {% endif %}
 		   <div class="list-group-item" style = "background-color:#111111;color:white">
 		         <div class="input-group col-sm-5" style = "margin:0 auto;text-align:center;">
-			         <input type="text" class="form-control  pull-left" placeholder="AccountID" name="accountid">
+			         <input type="text" class="form-control  pull-left" placeholder="AccountID" name="accountid" onkeydown = "checkinput(event)">
 			     </div>
 		   </div>
 		   <div class="list-group-item" style = "background-color:#111111;color:white">

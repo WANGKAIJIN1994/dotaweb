@@ -3,7 +3,12 @@
 
 {% block content %}
 <script>
-function checkinput(){
+function checkinput(event){
+  var keyCode = event.keyCode;
+  console.log(keyCode);
+  if (keyCode < 48 || keyCode > 57){
+    event.returnValue = false;
+  }
   var input = document.form_login.accountid.value;
   if(input.length > 20){
      alert('the word is too long!');
@@ -19,7 +24,7 @@ function checkinput(){
       <div class="col-lg-8 col-md-offset-2">
           <form name="form_login" action="" method="post">
             <div class="input-group">
-               <input type="text" name="accountid" class="form-control" onkeydown = "checkinput()">
+               <input type="text" name="accountid" class="form-control" onkeydown = "checkinput(event)">
                <span class="input-group-btn">
                   <button class="btn btn-default" type="submit">
                     Add!
