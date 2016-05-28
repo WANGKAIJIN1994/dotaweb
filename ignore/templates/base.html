@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+{% block head %}
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index.css') }}">
+	<title>{% block title %}{% endblock %}-DotaMax</title>
+{% endblock %}
+</head>
+<body>
+{% block body %}
+	<heard>
+	{% block heard %}
+	    {% block information %}
+		<div class="nav-logo">
+			<img class="user-avatar" src="{ url_for('static',filename='images/default_avatar.png') }"/>
+			<div class="user-infor">
+				<p class="row">
+					<span class="label">当前账号</span>
+					<span class="content">替换</span>
+				</p>
+				<p class="row">
+					<span class="label">MAX ID</span>
+					<span class="content">替换</span>
+				</p>
+				<p class="row">
+					<span class="label">昵称</span>
+					<span class="content">替换</span>
+				</p>
+				<p class="row">
+					<span class="label">Steam ID</span>
+					<span class="content">替换替换替换替换</span>
+				</p>
+			</div>
+		</div>
+		{% endblock %}
+		{% block nav %}
+		<nav id="nav-heard">
+			<ul>
+				<li><a href="index">综合统计</a></li>
+				<li><a href="hero">英雄统计</a></li>
+				<li><a href="goods">物品统计</a></li>
+				<li><a href="competition">比赛统计</a></li>
+			</ul>
+		</nav>
+		{% endblock %}
+	{% endblock %}
+	</heard>
+	<section class="wrap">
+	{% block wrap %}
+	{% endblock %}
+	</section> 
+{% endblock %}
+<script type="text/javascript" src="{{ url_for('static',filename='index.js') }}"></script>
+</body>
+</html>
